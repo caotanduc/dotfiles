@@ -1,0 +1,21 @@
+theme = Gruvbox Light Hard
+adjust-cell-height = 30%
+font-family = Source Code Pro Medium
+font-size = 16
+macos-icon = paper
+
+macos-titlebar-style = hidden
+window-decoration = false
+confirm-close-surface = false
+quit-after-last-window-closed = true
+window-padding-x=0,0
+window-padding-y=0,0
+
+copy-on-select = clipboard
+
+keybind = clear
+macos-option-as-alt = true
+keybind = super+enter=ignore
+
+keybind = super+c=copy_to_clipboard
+keybind = super+v=paste_from_clipboard
