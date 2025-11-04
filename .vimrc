@@ -156,7 +156,7 @@ vnoremap <S-up> :m '<-2<CR>gv=gv
 
 nnoremap <C-a> gg<S-v>G
 
-call plug#begin()
+" call plug#begin()
 
 " Plug 'tpope/vim-surround'
 " Plug 'tpope/vim-repeat'
