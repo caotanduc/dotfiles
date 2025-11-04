@@ -5,7 +5,7 @@
 (setq inhibit-startup-screen t)
 (setq visible-bell t)
 
-(add-to-list 'default-frame-alist `(font . "Iosevka Extended-20"))
+(add-to-list 'default-frame-alist `(font . "Iosevka Extended-16"))
 
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -86,7 +86,7 @@
 
 (use-package orderless
   :custom
-  (completion-styles '(orderless basic))
+  (completion-styles '(partial-completion flex))
   (completion-category-overrides '((file (styles partial-completion))))
   (completion-category-defaults nil) ;; Disable defaults, use our settings
   (completion-pcm-leading-wildcard t)) ;; Emacs 31: partial-completion behaves like substring
@@ -326,7 +326,7 @@ Reuses an existing Eshell buffer if available."
   (load-theme 'pylight t))
 
 (global-vscode-mode 1)
-(add-hook 'emacs-startup-hook #'my/welcome-buffer)
+;; (add-hook 'emacs-startup-hook #'my/welcome-buffer)
 
 (require 'magit)
 (setq mode-line-right-align-edge 'right-fringe)
