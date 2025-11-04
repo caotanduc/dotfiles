@@ -21,7 +21,7 @@
 
 (setq-default display-fill-column-indicator-column 79)
 
-(set-face-attribute 'fill-column-indicator nil :background nil :foreground "grey90")
+(set-face-attribute 'fill-column-indicator nil :background 'unspecified :foreground "grey90")
 
 (setq tab-always-indent 'complete)
 (setq eshell-destroy-buffer-when-process-dies t)
@@ -326,7 +326,7 @@ Reuses an existing Eshell buffer if available."
   (load-theme 'pylight t))
 
 (global-vscode-mode 1)
-;; (add-hook 'emacs-startup-hook #'my/welcome-buffer)
+(add-hook 'emacs-startup-hook #'my/welcome-buffer)
 
 (require 'magit)
 (setq mode-line-right-align-edge 'right-fringe)
@@ -351,6 +351,7 @@ Reuses an existing Eshell buffer if available."
    mode-line-format-right-align
    "Ln: %l "
    (:eval
-    (when conda-env-current-name
+    (when (and (boundp 'conda-env-current-name)
+               conda-env-current-name)
       (concat "[py:" conda-env-current-name "]")))
    mode-line-end-spaces))
