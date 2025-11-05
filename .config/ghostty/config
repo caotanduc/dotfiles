@@ -23,3 +23,6 @@ keybind = super+enter=ignore
 
 keybind = super+c=copy_to_clipboard
 keybind = super+v=paste_from_clipboard
+keybind = super+0=reset_font_size
+keybind = super+-=decrease_font_size:1
+keybind = super++=increase_font_size:1
