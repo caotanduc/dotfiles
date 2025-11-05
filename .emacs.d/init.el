@@ -353,5 +353,5 @@ Reuses an existing Eshell buffer if available."
    (:eval
     (when (and (boundp 'conda-env-current-name)
                conda-env-current-name)
-      (concat "[py:" conda-env-current-name "]")))
+      (concat "[" conda-env-current-name "]")))
    mode-line-end-spaces))
