@@ -5,7 +5,7 @@
 (setq inhibit-startup-screen t)
 (setq visible-bell t)
 
-(add-to-list 'default-frame-alist `(font . "Iosevka Extended-16"))
+(add-to-list 'default-frame-alist `(font . "Iosevka Extended-20"))
 
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -323,7 +323,7 @@ Reuses an existing Eshell buffer if available."
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (when window-system
-  (load-theme 'pylight t))
+  (load-theme 'github-dark-colorblind t))
 
 (global-vscode-mode 1)
 (add-hook 'emacs-startup-hook #'my/welcome-buffer)
