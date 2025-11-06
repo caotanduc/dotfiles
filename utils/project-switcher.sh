@@ -61,4 +61,4 @@ if [[ -n "$ENV_NAME" ]]; then
   tmux send-keys -t "$SESSION_NAME" "conda activate $ENV_NAME" C-m
 fi
 
-tmux display-message "✅ Opened project '$PROJECT' at '$ROOT'"
+tmux display-message "Opened project '$PROJECT' at '$ROOT'"
