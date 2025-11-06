@@ -16,7 +16,7 @@ EOF
 
 # Use fzf or fallback to select with read
 if command -v fzf &>/dev/null; then
-  CHOICE=$(echo "$MENU" | fzf --prompt="Select action: " --height=50%)
+  CHOICE=$(echo "$MENU" | fzf --prompt="Select action: ")
 else
   echo "$MENU" | nl
   read -rp "Choose an action number: " n
@@ -28,23 +28,23 @@ case "$CHOICE" in
     read -rp "Enter new project root path: " NEWROOT
     if [[ -d "$NEWROOT" ]]; then
       grep -qxF "$NEWROOT" "$CACHE_FILE" 2>/dev/null || echo "$NEWROOT" >>"$CACHE_FILE"
-      echo "✅ Added: $NEWROOT"
+      echo "Added: $NEWROOT"
     else
-      echo "❌ Invalid path: $NEWROOT"
+      echo "Invalid path: $NEWROOT"
     fi
     ;;
   "Remove a project root")
     ROOT=$(cat "$CACHE_FILE" | fzf --prompt="Select root to remove: ")
-    [[ -n "$ROOT" ]] && grep -vxF "$ROOT" "$CACHE_FILE" > "${CACHE_FILE}.tmp" && mv "${CACHE_FILE}.tmp" "$CACHE_FILE" && echo "🗑 Removed: $ROOT"
+    [[ -n "$ROOT" ]] && grep -vxF "$ROOT" "$CACHE_FILE" > "${CACHE_FILE}.tmp" && mv "${CACHE_FILE}.tmp" "$CACHE_FILE" && echo "Removed: $ROOT"
     ;;
   "List all project roots")
-    echo "📁 Project roots:"
+    echo "Project roots:"
     cat "$CACHE_FILE" || echo "(none)"
     read -rp "Press ENTER to close..."
     ;;
   "Clear all roots")
     > "$CACHE_FILE"
-    echo "🧹 Cleared all roots."
+    echo "Cleared all roots."
     ;;
   "Cancel"|*)
     echo "Cancelled."

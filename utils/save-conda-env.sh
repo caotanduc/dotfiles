@@ -15,7 +15,7 @@ echo "[INFO] Path: $CURRENT_PATH"
 ENVS=$(conda env list 2>/dev/null | awk 'NR>2 && NF {print $1}')
 
 if [[ -z "$ENVS" ]]; then
-  echo "⚠️  No Conda environments found."
+  echo "No Conda environments found."
   exit 1
 fi
 
@@ -28,4 +28,4 @@ SELECTED=$(echo "$ENVS" | fzf)
 # 3. Save mapping (project path → selected env)
 # ─────────────────────────────────────────────
 "$HELPER" set "$CURRENT_PATH" "$SELECTED"
-tmux display-message "✅ Saved and activate Conda env '$SELECTED' for '$CURRENT_PATH'"
+tmux display-message "Saved and activate Conda env '$SELECTED' for '$CURRENT_PATH'"
