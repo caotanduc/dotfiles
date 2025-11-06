@@ -48,17 +48,12 @@ PROJECT=$(find . -maxdepth 1 -type d ! -name '.' | sed 's|^\./||' | fzf --prompt
 
 PROJECT_PATH="$ROOT/$PROJECT"
 SESSION_NAME="$(basename "$PROJECT")"
-ENV_NAME="$($HELPER get "$PROJECT_PATH" || true)"
 
 if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
   tmux switch-client -t "$SESSION_NAME"
 else
   tmux new-session -d -s "$SESSION_NAME" -c "$PROJECT_PATH"
   tmux switch-client -t "$SESSION_NAME"
-fi
-
-if [[ -n "$ENV_NAME" ]]; then
-  tmux send-keys -t "$SESSION_NAME" "conda activate $ENV_NAME" C-m
 fi
 
 tmux display-message "Opened project '$PROJECT' at '$ROOT'"

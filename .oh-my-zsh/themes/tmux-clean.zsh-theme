@@ -1,6 +1,8 @@
 # ─── Minimal Prompt (no path, keeps git + virtualenv) ─────────────────────
 
 preexec() {
+  [[ -z "$1" ]] && return
+
   echo -ne "\033[1A\033[2K"
   local cmd="${1#"${1%%[![:space:]]*}"}"
   cmd="${cmd%"${cmd##*[![:space:]]}"}"
