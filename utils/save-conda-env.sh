@@ -11,7 +11,7 @@ if [[ -z "$ENVS" ]]; then
   exit 1
 fi
 
-SELECTED=$(echo "$ENVS" | fzf --prompt "Conda envs")
+SELECTED=$(echo "$ENVS" | fzf --prompt "Conda envs: ")
 
 "$HELPER" set "$CURRENT_PATH" "$SELECTED"
 tmux display-message "Saved and activate Conda env '$SELECTED' for '$CURRENT_PATH'"
