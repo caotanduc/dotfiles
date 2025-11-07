@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
-# ~/.utils/conda-helper.sh
-# Store or retrieve Conda environments for tmux project paths
 
 TMUX_CONDA_MAP="${XDG_CACHE_HOME:-$HOME/.cache}/tmux-conda-map"
 mkdir -p "$(dirname "$TMUX_CONDA_MAP")"
-touch "$TMUX_CONDA_MAP"
 
 CMD="$1"
 PROJECT_PATH="$(realpath "$2" 2>/dev/null)"
