@@ -14,4 +14,5 @@ fi
 SELECTED=$(echo "$ENVS" | fzf --prompt "Conda envs: ")
 
 "$HELPER" set "$CURRENT_PATH" "$SELECTED"
+tmux send-keys "conda activate $SELECTED" Enter
 tmux display-message "Saved and activate Conda env '$SELECTED' for '$CURRENT_PATH'"
