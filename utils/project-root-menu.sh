@@ -1,52 +1,35 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -eu
 
 CACHE_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/tmux-projects-root"
 mkdir -p "$(dirname "$CACHE_FILE")"
-touch "$CACHE_FILE"
 
 MENU=$(cat <<EOF
-Add new project root
-Remove a project root
-List all project roots
-Clear all roots
-Cancel
+Add new project
+Remove a project
+Clear all projects
 EOF
 )
 
-# Use fzf or fallback to select with read
-if command -v fzf &>/dev/null; then
-  CHOICE=$(echo "$MENU" | fzf --prompt="Select action: ")
-else
-  echo "$MENU" | nl
-  read -rp "Choose an action number: " n
-  CHOICE=$(echo "$MENU" | sed -n "${n}p")
-fi
+CHOICE=$(echo "$MENU" | fzf --prompt="Select action: ")
 
 case "$CHOICE" in
-  "Add new project root")
-    read -rp "Enter new project root path: " NEWROOT
+    "Add new project")
+    NEWROOT=$(find ~ -type d -maxdepth 3 2>/dev/null | fzf --prompt="Select project root: ")
+	
     if [[ -d "$NEWROOT" ]]; then
       grep -qxF "$NEWROOT" "$CACHE_FILE" 2>/dev/null || echo "$NEWROOT" >>"$CACHE_FILE"
-      echo "Added: $NEWROOT"
+      tmux display-message "Added: $NEWROOT"
     else
-      echo "Invalid path: $NEWROOT"
+      tmux display-message "Invalid path: $NEWROOT"
     fi
     ;;
-  "Remove a project root")
+  "Remove a project")
     ROOT=$(cat "$CACHE_FILE" | fzf --prompt="Select root to remove: ")
     [[ -n "$ROOT" ]] && grep -vxF "$ROOT" "$CACHE_FILE" > "${CACHE_FILE}.tmp" && mv "${CACHE_FILE}.tmp" "$CACHE_FILE" && echo "Removed: $ROOT"
     ;;
-  "List all project roots")
-    echo "Project roots:"
-    cat "$CACHE_FILE" || echo "(none)"
-    read -rp "Press ENTER to close..."
-    ;;
-  "Clear all roots")
+  "Clear all projects")
     > "$CACHE_FILE"
-    echo "Cleared all roots."
-    ;;
-  "Cancel"|*)
-    echo "Cancelled."
+    tmux display-message "Cleared all roots."
     ;;
 esac
