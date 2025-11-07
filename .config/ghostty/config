@@ -1,3 +1,5 @@
+maximize = true
+
 theme = Github Dark Colorblind
 adjust-cell-height = 30%
 macos-icon = paper
