@@ -4,7 +4,7 @@ preexec() {
   echo -ne "\033[1A\033[2K\033[1A\033[2K"
   local cmd="${1#"${1%%[![:space:]]*}"}"
   cmd="${cmd%"${cmd##*[![:space:]]}"}"
-  [[ -n "$cmd" ]] && echo -e "\033[1;3;4;37m$cmd\033[0m"
+  [[ -n "$cmd" ]] && echo -e "\n\033[1;3;4;37m$cmd\033[0m"
 }
 
 NEWLINE=$'\n'
