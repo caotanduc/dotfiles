@@ -26,21 +26,35 @@
 (setq tab-always-indent 'complete)
 (setq eshell-destroy-buffer-when-process-dies t)
 
+;; ─────────────────────────────────────────────
+;;  Custom file (separate from init.el)
+;; ─────────────────────────────────────────────
 (setq custom-file (expand-file-name ".emacs.custom.el" user-emacs-directory))
-(load custom-file)
+(unless (file-exists-p custom-file)
+  (with-temp-buffer (write-file custom-file)))
+(load custom-file 'noerror 'nomessage)
 
-(let ((data-dir (expand-file-name "tmp/" user-emacs-directory)))
-  (make-directory data-dir t)
-  (setq backup-directory-alist `(("." . ,(expand-file-name "backups/" data-dir))))
-  (setq auto-save-list-file-prefix (expand-file-name "auto-saves/sessions/" data-dir))
-  (setq auto-save-file-name-transforms `((".*", (expand-file-name "auto-saves" data-dir) t))))
+;; ─────────────────────────────────────────────
+;;  Directory structure for user data
+;; ─────────────────────────────────────────────
+(let* ((base-dir user-emacs-directory)
+       (tmp-dir  (expand-file-name "tmp/" base-dir))
+       (var-dir  (expand-file-name "var/" base-dir)))
 
-(let ((data-dir (expand-file-name "var/" user-emacs-directory)))
-  (make-directory data-dir t)
-  (setq auto-save-list-file-prefix (expand-file-name "auto-save/" data-dir))
-  (setq eshell-directory-name (expand-file-name "eshell/" data-dir))
-  (setq transient-history-file (expand-file-name "transient/history.el" data-dir))
-  (setq package-user-dir (expand-file-name "elpa/" data-dir)))
+  ;; Ensure directories exist
+  (dolist (dir (list tmp-dir var-dir))
+    (make-directory dir t))
+
+  ;; Backups and autosaves
+  (setq backup-directory-alist `(("." . ,(expand-file-name "backups/" tmp-dir))))
+  (setq auto-save-file-name-transforms `((".*" ,(expand-file-name "auto-saves/" tmp-dir) t)))
+  (setq auto-save-list-file-prefix (expand-file-name "auto-saves/sessions/" tmp-dir))
+
+  ;; Persistent data (non-temporary)
+  (setq eshell-directory-name       (expand-file-name "eshell/" var-dir))
+  (setq transient-history-file      (expand-file-name "transient/history.el" var-dir))
+  (setq package-user-dir            (expand-file-name "elpa/" var-dir))
+)
 
 ;; Packages
 (setq use-package-always-defer t)
@@ -101,31 +115,19 @@
          ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
          ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
          ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
          ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
-         ;; Other custom bindings
-         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
          ;; M-g bindings in `goto-map'
          ("M-g e" . consult-compile-error)
          ("M-g r" . consult-grep-match)
          ("M-g g" . consult-goto-line)             ;; orig. goto-line
          ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-         ("M-g m" . consult-mark)
-         ("M-g k" . consult-global-mark)
-         ("M-g i" . consult-imenu)
-         ("M-g I" . consult-imenu-multi)
          ;; M-s bindings in `search-map'
          ("M-s d" . consult-find)                  ;; Alternative: consult-fd
          ("M-s c" . consult-locate)
          ("M-s g" . consult-grep)
          ("M-s G" . consult-git-grep)
          ("M-s r" . consult-ripgrep)
-         ("M-s l" . consult-line)
-         ("M-s L" . consult-line-multi)
-         ("M-s k" . consult-keep-lines)
-         ("M-s u" . consult-focus-lines)
          ;; Isearch integration
          ("M-s e" . consult-isearch-history)
          :map isearch-mode-map
@@ -154,60 +156,21 @@
    :preview-key '(:debounce 0.4 any))
 )
 
-(with-eval-after-load 'eshell
-  (define-key eshell-mode-map (kbd "s-r") #'consult-history))
-
-;; -----------------------------
-;; Project-aware Eshell workflow
-;; -----------------------------
-
-(defun my/project-eshell-buffer-name ()
-  "Return an Eshell buffer name based on the current project."
-  (if-let ((proj (project-current)))
-      (format "*eshell-%s*" (project-name proj))
-    "*eshell*"))
-
-(defun my/project-or-global-eshell ()
-  "Open project Eshell if in a project, otherwise reuse global Eshell.
-Reuses an existing Eshell buffer if available."
-  (interactive)
-  (let* ((name (my/project-eshell-buffer-name))
-         (buf (get-buffer name)))
-    (if buf
-        (switch-to-buffer buf)
-      (if-let ((proj (project-current)))
-          (project-eshell)
-        (eshell)))))
-
-(defun my/project-eshell-new ()
-  "Always open a new Eshell buffer for the current project."
-  (interactive)
-  (let ((default-directory
-          (if-let ((proj (project-root (project-current))))
-              proj
-            default-directory))
-        (eshell-buffer-name (generate-new-buffer-name (my/project-eshell-buffer-name))))
-    (eshell)))
-
-;; Keybindings
-(global-set-key (kbd "C-`") #'my/project-or-global-eshell)
-(global-set-key (kbd "C-~") #'my/project-eshell-new)
+(use-package diff-hl)
+(diff-hl-margin-mode 1)
+(global-diff-hl-mode)
 
 (use-package magit)
 
 (use-package multiple-cursors)
-
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 
-(when (and (eq system-type 'darwin) window-system)
-  (setq exec-path (append exec-path '("/opt/homebrew/bin/"
-                                      "~/.cargo/bin/"
-                                      "/usr/local/bin/"))))
-
 (use-package expand-region
   :bind (("C-=" . er/expand-region)))
+
+(use-package indent-bars)
 
 (use-package breadcrumb)
 
@@ -218,6 +181,8 @@ Reuses an existing Eshell buffer if available."
 (setq treesit-language-source-alist
       '((python "https://github.com/tree-sitter/tree-sitter-python" "v0.23.6")
 	(yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.2")))
+
+(setq flymake-no-changes-timeout nil)
 
 (use-package eglot
   :hook ((eglot--managed-mode . breadcrumb-local-mode)
@@ -267,10 +232,10 @@ Reuses an existing Eshell buffer if available."
   :ensure nil
   :hook ((python-ts-mode . display-fill-column-indicator-mode)
 	 (python-ts-mode . eglot-ensure)
-         (python-ts-mode . conda-env-autoactivate-mode)
          (python-ts-mode . ruff-check-on-save-mode)
          (python-ts-mode . ruff-organize-imports-on-save-mode)
-         (python-ts-mode . ruff-format-on-save-mode))
+         (python-ts-mode . ruff-format-on-save-mode)
+	 (python-ts-mode . indent-bars-mode))
   :mode (("\\.py\\'" . python-ts-mode))
   :config
   (setq indent-tabs-mode nil)
@@ -278,37 +243,8 @@ Reuses an existing Eshell buffer if available."
   (setq electric-indent-inhibit nil)
   (electric-indent-mode 1))
 
-(use-package conda
-  :config
-  (conda-env-initialize-eshell)
-  (conda-env-initialize-interactive-shells)
-  (conda-env-autoactivate-mode t)
-  
-  (conda-mode-line-setup)
-  (custom-set-variables
-   '(conda-anaconda-home "~/miniconda3/")
-   '(conda-env-home-directory "~/miniconda3/")))
-
-(use-package git-gutter)
-(global-git-gutter-mode +1)
-
-(use-package vterm
-  :init
-  (setq vterm-kill-buffer-on-exit t))
-
-(use-package eat
-  :init
-  (setq eat-kill-buffer-on-exit t))
-
 (use-package esh-autosuggest
   :hook (eshell-mode . esh-autosuggest-mode))
-
-;; For `eat-eshell-mode'.
-(add-hook 'eshell-load-hook #'eat-eshell-mode)
-
-;; For `eat-eshell-visual-command-mode'.
-(add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
-
 
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
 (require 'eglot-booster)
@@ -322,8 +258,7 @@ Reuses an existing Eshell buffer if available."
 (global-set-key (kbd "C-_") #'jumpy-forward)
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-(when window-system
-  (load-theme 'github-dark-colorblind t))
+(load-theme 'github-dark-colorblind t)
 
 (global-vscode-mode 1)
 (add-hook 'emacs-startup-hook #'my/welcome-buffer)
@@ -339,10 +274,6 @@ Reuses an existing Eshell buffer if available."
      mode-line-remote mode-line-window-dedicated)
     display (min-width (6.0)))
    mode-line-frame-identification mode-line-buffer-identification " "
-   (:eval
-    (let ((branch (magit-get-current-branch)))
-      (when branch
-	(format " %s " branch))))
    (project-mode-line project-mode-line-format)
    ;; Flymake
    (:eval (when (bound-and-true-p flymake-mode)
@@ -350,8 +281,26 @@ Reuses an existing Eshell buffer if available."
    ;; Align right
    mode-line-format-right-align
    "Ln: %l "
-   (:eval
-    (when (and (boundp 'conda-env-current-name)
-               conda-env-current-name)
-      (concat "[" conda-env-current-name "]")))
    mode-line-end-spaces))
+
+;; Clipboard integration for macOS terminal Emacs
+(when (and (eq system-type 'darwin) (not (display-graphic-p)))
+  (setq interprogram-cut-function
+        (lambda (text &optional push)
+          (let ((process-connection-type nil))
+            (let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
+              (process-send-string proc text)
+              (process-send-eof proc)))))
+  (setq interprogram-paste-function
+        (lambda ()
+          (shell-command-to-string "pbpaste"))))
+
+;; if having compiling issue, run this
+;; (byte-recompile-directory package-user-dir nil 'force)
+(setq load-prefer-newer t)
+
+(use-package kkp
+  :ensure t
+  :config
+  ;; (setq kkp-alt-modifier 'alt) ;; use this if you want to map the Alt keyboard modifier to Alt in Emacs (and not to Meta)
+  (global-kkp-mode +1))
