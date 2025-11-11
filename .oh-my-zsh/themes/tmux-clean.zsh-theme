@@ -9,7 +9,7 @@ preexec() {
 
 NEWLINE=$'\n'
 
-PROMPT='$NEWLINE$(virtualenv_prompt_info)%d $(git_prompt_info)\
+PROMPT='$(virtualenv_prompt_info)%d $(git_prompt_info)\
 ${NEWLINE}%(?..%{$fg[red]%}[%?] %{$reset_color%})\
 %{$fg[red]%}%(!.#.$)%{$reset_color%} '
 
