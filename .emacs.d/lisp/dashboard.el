@@ -10,8 +10,8 @@ Close the buffer when any key is pressed."
       (setq mode-line-format nil
             cursor-type nil)
       ;; Build the two parts
-      (let* ((fake (propertize "fake" 'face '(:foreground "yellow" :background "black" :weight bold :height 5.0)))
-             (ide  (propertize "ide"  'face '(:foreground "black"  :background "yellow" :weight bold :height 5.0)))
+      (let* ((fake (propertize "fake" 'face '(:foreground "yellow" :background "black" :weight bold :height 10.0)))
+             (ide  (propertize "ide"  'face '(:foreground "black"  :background "yellow" :weight bold :height 10.0)))
              (text (concat fake ide))
              (win-width (window-body-width))
              (win-height (window-body-height))
