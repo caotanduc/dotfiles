@@ -162,13 +162,8 @@
 
 (use-package magit)
 
-(use-package multiple-cursors)
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-
 (use-package expand-region
-  :bind (("C-=" . er/expand-region)))
+  :bind (("M-=" . er/expand-region)))
 
 (use-package indent-bars)
 
@@ -254,14 +249,14 @@
 
 (jumpy-mode 1)
 
-(global-set-key (kbd "C--")   #'jumpy-back)
-(global-set-key (kbd "C-_") #'jumpy-forward)
+(global-set-key (kbd "C-c -")   #'jumpy-back)
+(global-set-key (kbd "C-c _") #'jumpy-forward)
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (load-theme 'github-dark-colorblind t)
 
 (global-vscode-mode 1)
-(add-hook 'emacs-startup-hook #'my/welcome-buffer)
+;; (add-hook 'emacs-startup-hook #'my/welcome-buffer)
 
 (require 'magit)
 (setq mode-line-right-align-edge 'right-fringe)
@@ -299,8 +294,4 @@
 ;; (byte-recompile-directory package-user-dir nil 'force)
 (setq load-prefer-newer t)
 
-(use-package kkp
-  :ensure t
-  :config
-  ;; (setq kkp-alt-modifier 'alt) ;; use this if you want to map the Alt keyboard modifier to Alt in Emacs (and not to Meta)
-  (global-kkp-mode +1))
+(setq mac-command-modifier 'super)
