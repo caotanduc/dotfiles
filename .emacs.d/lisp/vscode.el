@@ -1,12 +1,11 @@
 ;;; vscode.el --- VSCode-like UX and keybindings -*- lexical-binding: t; -*-
 ;; Author: Duc Cao
-;; Version: 0.6
+;; Version: 0.7
 ;; Keywords: convenience, vscode
 ;; Package-Requires: ((emacs "29.1") (consult "1.0"))
 ;;; Commentary:
 ;; Provides a VSCode-like experience for Emacs:
 ;;  - Command palette, buffer switching, explorer
-;;  - Go Back / Forward (Ctrl+- / Ctrl+Shift+-)
 ;;  - Insert line above/below
 ;;  - Select word (⌘d) and line (⌘l)
 ;;  - Optional global minor mode
@@ -16,6 +15,7 @@
 (require 'consult)
 (require 'project)
 (require 'dired)
+(require 'dired-x)       ;; for dired-jump
 (require 'xref)
 (require 'pulse)
 (require 'cl-lib)
@@ -29,7 +29,7 @@
   (interactive)
   (if (minibufferp)
       (keyboard-escape-quit)
-    (execute-extended-command nil)))
+    (call-interactively #'execute-extended-command)))
 
 (defun vscode-open-explorer ()
   "Open project root in Dired if inside a project, else use `dired-jump'."
@@ -70,15 +70,17 @@
   (let ((bounds (bounds-of-thing-at-point 'word)))
     (if bounds
         (progn
+          (set-mark (cdr bounds))
           (goto-char (car bounds))
-          (set-mark (cdr bounds)))
+          (activate-mark))
       (message "No word at point."))))
 
 (defun vscode-mark-whole-line ()
   "Select the entire current line (like VS Code’s ⌘L)."
   (interactive)
+  (set-mark (line-end-position))
   (beginning-of-line)
-  (set-mark (line-end-position)))
+  (activate-mark))
 
 (defun vscode-find-cursor ()
   "Momentarily highlight the current line to find the cursor."
@@ -92,36 +94,32 @@
 (defvar vscode-mode-map
   (let ((map (make-sparse-keymap)))
     ;; Main bindings
-    (define-key map (kbd "s-P")   #'vscode-toggle-command)
-    (define-key map (kbd "s-p")   #'vscode-switch-buffer)
-    (define-key map (kbd "s-F")   #'consult-ripgrep)
-    (define-key map (kbd "C-<tab>") #'consult-buffer)
-    (define-key map (kbd "s-w")   #'kill-this-buffer)
-    (define-key map (kbd "s-s")   #'save-buffer)
-    (define-key map (kbd "s-E")   #'vscode-open-explorer)
-    (define-key map (kbd "C-o")   #'vscode-insert-line-below)
-    (define-key map (kbd "s-<return>") #'vscode-insert-line-below)
-    (define-key map (kbd "s-S-<return>") #'vscode-insert-line-above)
-    (define-key map (kbd "s-d")   #'vscode-mark-whole-word)
-    (define-key map (kbd "s-l")   #'vscode-mark-whole-line)
-    (define-key map (kbd "s-\\")  #'vscode-find-cursor)
-    ;; Prefix map
-    (let ((prefix (make-sparse-keymap)))
-      (define-key prefix (kbd "w") #'vscode-kill-other-buffers)
-      (define-key map (kbd "C-c k") prefix))
-    map)
-  "Keymap for `vscode-mode'.")
+    (define-key map (kbd "M-P")           #'vscode-toggle-command)
+    (define-key map (kbd "M-p")           #'project-find-file)
+    (define-key map (kbd "s-F")           #'consult-ripgrep)
+    (define-key map (kbd "C-c TAB")     #'consult-project-buffer)
+    (define-key map (kbd "C-c w")         #'kill-this-buffer)
+    (define-key map (kbd "s-s")           #'save-buffer)
+    (define-key map (kbd "s-E")           #'vscode-open-explorer)
+    (define-key map (kbd "C-o")           #'vscode-insert-line-below)
+    (define-key map (kbd "C-c RET")  #'vscode-insert-line-below)
+    (define-key map (kbd "C-c d")         #'vscode-mark-whole-word)
+    (define-key map (kbd "C-c l")         #'vscode-mark-whole-line)
+    (define-key map (kbd "C-c \\")        #'vscode-find-cursor)
+    (define-key map (kbd "C-c k w")       #'vscode-kill-other-buffers)
+    map))
 
 ;;;###autoload
 (define-minor-mode vscode-mode
   "VSCode-like UX mode for Emacs."
   :init-value nil
   :lighter " VSCode"
-  :keymap vscode-mode-map ())
+  :keymap vscode-mode-map)
 
 ;;;###autoload
-(define-globalized-minor-mode global-vscode-mode vscode-mode
-  vscode-mode)
+(define-globalized-minor-mode global-vscode-mode
+  vscode-mode
+  (lambda () (vscode-mode 1)))
 
 ;; ─────────────────────────────────────────────────────────────
 ;; Provide
