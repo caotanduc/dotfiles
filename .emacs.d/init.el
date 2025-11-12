@@ -175,7 +175,8 @@
 
 (setq treesit-language-source-alist
       '((python "https://github.com/tree-sitter/tree-sitter-python" "v0.23.6")
-	(yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.2")))
+	(yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.2")
+	(dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")))
 
 (setq flymake-no-changes-timeout nil)
 
@@ -222,6 +223,11 @@
   :ensure nil
   :mode (("\\.yaml\\'" . yaml-ts-mode)
 	 ("\\.yml\\'" . yaml-ts-mode)))
+
+(use-package dockerfile-ts-mode
+  :ensure nil
+  :mode (("Dockerfile\\'" . dockerfile-ts-mode)
+         ("\\.[Dd]ockerfile\\'" . dockerfile-ts-mode)))
 
 (use-package python-ts-mode
   :ensure nil
