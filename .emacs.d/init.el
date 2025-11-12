@@ -306,3 +306,6 @@
 ;; if having compiling issue, run this
 ;; (byte-recompile-directory package-user-dir nil 'force)
 (setq load-prefer-newer t)
+
+(setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+(add-hook 'magit-status-mode-hook #'delete-other-windows)
