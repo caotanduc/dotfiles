@@ -89,7 +89,7 @@
   (savehist-mode))
 
 ;; Allow nested minibuffers
-(setq enable-recursive-minibuffers t)
+;; (setq enable-recursive-minibuffers t)
 
 ;; Hide commands in M-x that don’t work in current mode
 (setq read-extended-command-predicate #'command-completion-default-include-p)
