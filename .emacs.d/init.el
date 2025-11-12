@@ -174,9 +174,13 @@
   (global-company-mode))
 
 (setq treesit-language-source-alist
-      '((python "https://github.com/tree-sitter/tree-sitter-python" "v0.23.6")
-	(yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.2")
-	(dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")))
+      '((python      "https://github.com/tree-sitter/tree-sitter-python" "v0.23.6")
+	(yaml        "https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.2")
+	(dockerfile  "https://github.com/camdencheek/tree-sitter-dockerfile")
+	(html        "https://github.com/tree-sitter/tree-sitter-html")
+        (css         "https://github.com/tree-sitter/tree-sitter-css" "v0.23.2")
+        (javascript  "https://github.com/tree-sitter/tree-sitter-javascript" "v0.23.1")
+        (typescript  "https://github.com/tree-sitter/tree-sitter-typescript" "v0.23.1" "typescript/src")))
 
 (setq flymake-no-changes-timeout nil)
 
@@ -252,6 +256,9 @@
 (require 'vscode)
 (require 'dashboard)
 (require 'jumpy)
+(require 'visual-indentation-mode)
+
+;; (add-hook 'prog-mode-hook #'visual-indentation-mode)
 
 (jumpy-mode 1)
 
@@ -299,5 +306,3 @@
 ;; if having compiling issue, run this
 ;; (byte-recompile-directory package-user-dir nil 'force)
 (setq load-prefer-newer t)
-
-(setq mac-command-modifier 'super)
