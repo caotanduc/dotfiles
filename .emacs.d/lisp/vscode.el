@@ -101,10 +101,11 @@
     (define-key map (kbd "s-s")           #'save-buffer)
     (define-key map (kbd "s-E")           #'vscode-open-explorer)
     (define-key map (kbd "C-o")           #'vscode-insert-line-below)
-    (define-key map (kbd "C-c RET")  #'vscode-insert-line-below)
+    (define-key map (kbd "C-c o")  #'vscode-insert-line-above)
     (define-key map (kbd "C-c d")         #'vscode-mark-whole-word)
     (define-key map (kbd "C-c l")         #'vscode-mark-whole-line)
     (define-key map (kbd "C-c \\")        #'vscode-find-cursor)
+    (define-key map (kbd "C-c /")         #'comment-line)
     (define-key map (kbd "C-c k w")       #'vscode-kill-other-buffers)
     map))
 
