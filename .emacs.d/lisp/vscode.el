@@ -94,8 +94,7 @@
 (defvar vscode-mode-map
   (let ((map (make-sparse-keymap)))
     ;; Main bindings
-    (define-key map (kbd "M-P")           #'vscode-toggle-command)
-    (define-key map (kbd "M-p")           #'project-find-file)
+    (define-key map (kbd "M-RET")           #'vscode-toggle-command)
     (define-key map (kbd "s-F")           #'consult-ripgrep)
     (define-key map (kbd "C-c TAB")     #'consult-project-buffer)
     (define-key map (kbd "C-c w")         #'kill-this-buffer)
