@@ -192,6 +192,7 @@
   (customize-set-variable 'eglot-events-buffer-config '(:size 0))
   (fset #'jsonrpc--log-event #'ignore)
   (setq jsonrpc-event-hook nil)
+  ;; (setq lsp-booster-bytecode-max-bytes 0)
   ;; Run both basedpyright and ruff for python-ts-mode
   (add-to-list 'eglot-server-programs
                `(python-ts-mode . ,(eglot-alternatives '(("pyright-langserver" "--stdio")
@@ -309,3 +310,5 @@
 
 (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
 (add-hook 'magit-status-mode-hook #'delete-other-windows)
+
+(setq require-final-newline t)
