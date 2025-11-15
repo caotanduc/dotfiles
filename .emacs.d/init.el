@@ -224,6 +224,18 @@
     :program "ruff"
     :args `("format" "--stdin-filename" ,buffer-file-name "-")))
 
+(use-package js-ts-mode
+  :ensure nil
+  :mode (("\\.js\\'" . js-ts-mode)))
+
+(use-package html-ts-mode
+  :ensure nil
+  :mode (("\\.html\\'" . html-ts-mode)))
+
+(use-package css-ts-mode
+  :ensure nil
+  :mode (("\\.css\\'" . css-ts-mode)))
+
 (use-package yaml-ts-mode
   :ensure nil
   :mode (("\\.yaml\\'" . yaml-ts-mode)
@@ -312,3 +324,5 @@
 (add-hook 'magit-status-mode-hook #'delete-other-windows)
 
 (setq require-final-newline t)
+
+;; (setenv "COLORTERM" "truecolor")
