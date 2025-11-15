@@ -224,6 +224,10 @@
     :program "ruff"
     :args `("format" "--stdin-filename" ,buffer-file-name "-")))
 
+(use-package typescript-ts-mode
+  :ensure nil
+  :mode (("\\.ts\\'" . typescript-ts-mode)))
+
 (use-package js-ts-mode
   :ensure nil
   :mode (("\\.js\\'" . js-ts-mode)))
@@ -253,7 +257,8 @@
          (python-ts-mode . ruff-check-on-save-mode)
          (python-ts-mode . ruff-organize-imports-on-save-mode)
          (python-ts-mode . ruff-format-on-save-mode)
-	 (python-ts-mode . indent-bars-mode))
+	 ;; (python-ts-mode . indent-bars-mode)
+	 (python-ts-mode . visual-indentation-mode))
   :mode (("\\.py\\'" . python-ts-mode))
   :config
   (setq indent-tabs-mode nil)
