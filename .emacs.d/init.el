@@ -331,3 +331,7 @@
 (setq require-final-newline t)
 
 ;; (setenv "COLORTERM" "truecolor")
+
+(use-package keycast)
+
+(keycast-mode-line-mode)
