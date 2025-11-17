@@ -332,6 +332,5 @@
 
 ;; (setenv "COLORTERM" "truecolor")
 
-(use-package keycast)
+(global-unset-key (kbd "C-z"))
 
-(keycast-mode-line-mode)
