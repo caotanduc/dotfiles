@@ -275,6 +275,10 @@
 (require 'dashboard)
 (require 'jumpy)
 (require 'visual-indentation-mode)
+(require 'org-modern)
+
+(with-eval-after-load 'org (global-org-modern-mode))
+
 
 ;; (add-hook 'prog-mode-hook #'visual-indentation-mode)
 
@@ -334,3 +338,12 @@
 
 (global-unset-key (kbd "C-z"))
 
+(setq org-directory
+      '("~/orgs"))
+
+(setq org-agenda-files
+      '("tasks.org" "birthdays.org" "habits.org"))
+
+(setq org-agenda-start-with-log-mode t)
+(setq org-log-done 'time)
+(setq org-log-into-drawer t)
