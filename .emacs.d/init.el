@@ -275,10 +275,6 @@
 (require 'dashboard)
 (require 'jumpy)
 (require 'visual-indentation-mode)
-(require 'org-modern)
-
-(with-eval-after-load 'org (global-org-modern-mode))
-
 
 ;; (add-hook 'prog-mode-hook #'visual-indentation-mode)
 
@@ -338,12 +334,36 @@
 
 (global-unset-key (kbd "C-z"))
 
-(setq org-directory
-      '("~/orgs"))
-
-(setq org-agenda-files
-      '("tasks.org" "birthdays.org" "habits.org"))
-
 (setq org-agenda-start-with-log-mode t)
 (setq org-log-done 'time)
 (setq org-log-into-drawer t)
+
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+	(sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+
+(setq org-tag-alist
+      '((:startgroup)
+					; Put mutually exclusive tags here
+	(:endgroup)
+	("@errand" . ?E)
+	("@home" . ?H)
+	("@work" . ?W)
+	("agenda" . ?a)
+	("planning" . ?p)
+	("publish" . ?P)
+	("note" . ?n)
+	("idea" . ?i)))
+
+(setq org-agenda-custom-commands
+      '(("d" "Dashboard"
+	 ((agenda "" ((org-deadline-warning-days 7)))
+	  (todo "NEXT"
+		((org-agenda-overriding-header "Next Tasks")))
+	  (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))))
+
+(setq org-lowest-priority ?E)
+
+(use-package org-bullets)
+
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
