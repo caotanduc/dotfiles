@@ -179,6 +179,7 @@
 
 (setq treesit-language-source-alist
       '((python      "https://github.com/tree-sitter/tree-sitter-python" "v0.23.6")
+	(rust        "https://github.com/tree-sitter/tree-sitter-rust" "v0.23.3")
 	(yaml        "https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.2")
 	(dockerfile  "https://github.com/camdencheek/tree-sitter-dockerfile")
 	(html        "https://github.com/tree-sitter/tree-sitter-html")
@@ -227,6 +228,10 @@
   (reformatter-define ruff-format
     :program "ruff"
     :args `("format" "--stdin-filename" ,buffer-file-name "-")))
+
+(use-package rust-ts-mode
+  :ensure nil
+  :mode (("\\.rs\\'" . rust-ts-mode)))
 
 (use-package typescript-ts-mode
   :ensure nil
