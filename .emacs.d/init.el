@@ -1,4 +1,4 @@
-(tool-bar-mode -1)
+(tool-bar-mode 0)
 (menu-bar-mode 0)
 (scroll-bar-mode -1)
 
@@ -39,7 +39,8 @@
 ;; ─────────────────────────────────────────────
 (let* ((base-dir user-emacs-directory)
        (tmp-dir  (expand-file-name "tmp/" base-dir))
-       (var-dir  (expand-file-name "var/" base-dir)))
+       (var-dir  (expand-file-name "var/" base-dir))
+       (socket-dir (expand-file-name "server/" base-dir)))
 
   ;; Ensure directories exist
   (dolist (dir (list tmp-dir var-dir))
@@ -54,7 +55,10 @@
   (setq eshell-directory-name       (expand-file-name "eshell/" var-dir))
   (setq transient-history-file      (expand-file-name "transient/history.el" var-dir))
   (setq package-user-dir            (expand-file-name "elpa/" var-dir))
-)
+
+  ;; Server socket files
+  ;; (setq server-socket-dir socket-dir)
+  )
 
 ;; Packages
 (setq use-package-always-defer t)
@@ -334,6 +338,13 @@
 
 (global-unset-key (kbd "C-z"))
 
+(setq org-agenda-files
+      '("~/org/todo.org"
+        "~/org/work.org"
+        "~/org/home.org"
+        "~/org/projects.org"
+        "~/org/inbox.org"))
+
 (setq org-agenda-start-with-log-mode t)
 (setq org-log-done 'time)
 (setq org-log-into-drawer t)
@@ -363,7 +374,11 @@
 	  (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))))
 
 (setq org-lowest-priority ?E)
+(setq org-treat-insert-todo-heading-as-state-change t)
 
 (use-package org-bullets)
 
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+(use-package moc)
+
