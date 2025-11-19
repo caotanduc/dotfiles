@@ -393,4 +393,4 @@
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
 (use-package moc)
-
+(use-package olivetti)
