@@ -18,7 +18,7 @@
 ;; if having compiling issue, run this
 ;; (byte-recompile-directory package-user-dir nil 'force)
 
-(setq load-prefer-newer t)
+;; (setq load-prefer-newer t)
 (setq require-final-newline t)
 (global-unset-key (kbd "C-z"))
 
@@ -171,8 +171,6 @@
 (use-package expand-region
   :bind (("M-=" . er/expand-region)))
 
-(use-package breadcrumb)
-
 (use-package company
   :init
   (global-company-mode))
@@ -285,6 +283,7 @@
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
 (require 'eglot-booster)
 (require 'vscode)
+(require 'breadcrumb)
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (load-theme 'github-dark-colorblind t)
