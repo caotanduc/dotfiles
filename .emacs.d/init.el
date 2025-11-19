@@ -192,17 +192,23 @@
 (use-package eglot
   :hook ((eglot--managed-mode . breadcrumb-local-mode)
          (eglot--managed-mode . eglot-booster-mode))
-  :bind (:map eglot-mode-map ("<f2>" . eglot-rename))
+  :bind (:map eglot-mode-map ("<f2>" . eglot-rename)
+	      ("<f6>" . eglot-format-buffer))
   :config
   (customize-set-variable 'eglot-events-buffer-config '(:size 0))
   (fset #'jsonrpc--log-event #'ignore)
   (setq jsonrpc-event-hook nil)
   ;; (setq lsp-booster-bytecode-max-bytes 0)
   ;; Run both basedpyright and ruff for python-ts-mode
+  ;; brew install pyright ruff basedpyright
   (add-to-list 'eglot-server-programs
                `(python-ts-mode . ,(eglot-alternatives '(("pyright-langserver" "--stdio")
-                                                         ("basedpyright-langserver" "--stdio")
-                                                         ("ruff" "server")))))
+                                                          ("basedpyright-langserver" "--stdio")
+                                                          ("ruff" "server")))))
+
+  ;; rustup component add rust-analyzer
+  (add-to-list 'eglot-server-programs `(rust-ts-mode . ,(eglot-alternatives '(("rust-analyzer")))))
+  (setq eglot-ignored-server-capabilities '(:codeActionProvider))
 
   ;; Configure basedpyright and inlay hints
   (setq-default eglot-workspace-configuration
@@ -231,6 +237,9 @@
 
 (use-package rust-ts-mode
   :ensure nil
+  :hook ((rust-ts-mode . eglot-ensure)
+         (rust-ts-mode . visual-indentation-mode))
+
   :mode (("\\.rs\\'" . rust-ts-mode)))
 
 (use-package typescript-ts-mode
@@ -285,8 +294,6 @@
 (require 'jumpy)
 (require 'visual-indentation-mode)
 
-;; (add-hook 'prog-mode-hook #'visual-indentation-mode)
-
 (jumpy-mode 1)
 
 (global-set-key (kbd "C-c -")   #'jumpy-back)
@@ -296,7 +303,7 @@
 (load-theme 'github-dark-colorblind t)
 
 (global-vscode-mode 1)
-;; (add-hook 'emacs-startup-hook #'my/welcome-buffer)
+(add-hook 'emacs-startup-hook #'my/welcome-buffer)
 
 (require 'magit)
 (setq mode-line-right-align-edge 'right-fringe)
