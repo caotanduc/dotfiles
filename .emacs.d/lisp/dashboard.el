@@ -28,15 +28,7 @@ Close the buffer when any key is pressed."
       (local-set-key [wheel-up] #'ignore)
       (local-set-key [wheel-down] #'ignore)
       (local-set-key (kbd "<up>") #'ignore)
-      (local-set-key (kbd "<down>") #'ignore)
-
-      ;; Define keymap that closes the buffer on any key
-      (use-local-map (let ((map (make-sparse-keymap)))
-                       (define-key map [t]
-                         (lambda ()
-                           (interactive)
-                           (kill-buffer "*Welcome*")))
-                       map)))
+      (local-set-key (kbd "<down>") #'ignore))
     (switch-to-buffer buf)))
 
 (provide 'dashboard)
