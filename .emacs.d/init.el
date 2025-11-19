@@ -15,6 +15,12 @@
 (add-to-list 'default-frame-alist '(undecorated . t))
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+;; if having compiling issue, run this
+;; (byte-recompile-directory package-user-dir nil 'force)
+
+(setq load-prefer-newer t)
+(setq require-final-newline t)
+(global-unset-key (kbd "C-z"))
 
 ;; editor config
 (electric-pair-mode t)
@@ -198,7 +204,6 @@
   (customize-set-variable 'eglot-events-buffer-config '(:size 0))
   (fset #'jsonrpc--log-event #'ignore)
   (setq jsonrpc-event-hook nil)
-  ;; (setq lsp-booster-bytecode-max-bytes 0)
   ;; Run both basedpyright and ruff for python-ts-mode
   ;; brew install pyright ruff basedpyright
   (add-to-list 'eglot-server-programs
@@ -237,9 +242,7 @@
 
 (use-package rust-ts-mode
   :ensure nil
-  :hook ((rust-ts-mode . eglot-ensure)
-         (rust-ts-mode . visual-indentation-mode))
-
+  :hook ((rust-ts-mode . eglot-ensure))
   :mode (("\\.rs\\'" . rust-ts-mode)))
 
 (use-package typescript-ts-mode
@@ -274,9 +277,7 @@
 	 (python-ts-mode . eglot-ensure)
          (python-ts-mode . ruff-check-on-save-mode)
          (python-ts-mode . ruff-organize-imports-on-save-mode)
-         (python-ts-mode . ruff-format-on-save-mode)
-	 ;; (python-ts-mode . indent-bars-mode)
-	 (python-ts-mode . visual-indentation-mode))
+         (python-ts-mode . ruff-format-on-save-mode))
   :mode (("\\.py\\'" . python-ts-mode))
   :config
   (setq indent-tabs-mode nil)
@@ -290,9 +291,9 @@
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
 (require 'eglot-booster)
 (require 'vscode)
-(require 'dashboard)
+;; (require 'dashboard)
 (require 'jumpy)
-(require 'visual-indentation-mode)
+;; (require 'visual-indentation-mode)
 
 (jumpy-mode 1)
 
@@ -303,7 +304,6 @@
 (load-theme 'github-dark-colorblind t)
 
 (global-vscode-mode 1)
-(add-hook 'emacs-startup-hook #'my/welcome-buffer)
 
 (require 'magit)
 (setq mode-line-right-align-edge 'right-fringe)
@@ -337,19 +337,10 @@
         (lambda ()
           (shell-command-to-string "pbpaste"))))
 
-;; if having compiling issue, run this
-;; (byte-recompile-directory package-user-dir nil 'force)
-(setq load-prefer-newer t)
-
 (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
 (add-hook 'magit-status-mode-hook #'delete-other-windows)
 
-(setq require-final-newline t)
-
-;; (setenv "COLORTERM" "truecolor")
-
-(global-unset-key (kbd "C-z"))
-
+;; org mode config
 (setq org-agenda-files
       '("~/org/todo.org"
         "~/org/work.org"
@@ -389,8 +380,4 @@
 (setq org-treat-insert-todo-heading-as-state-change t)
 
 (use-package org-bullets)
-
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-
-(use-package moc)
-(use-package olivetti)
