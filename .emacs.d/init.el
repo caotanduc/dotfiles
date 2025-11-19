@@ -166,16 +166,10 @@
    :preview-key '(:debounce 0.4 any))
 )
 
-(use-package diff-hl)
-(diff-hl-margin-mode 1)
-(global-diff-hl-mode)
-
 (use-package magit)
 
 (use-package expand-region
   :bind (("M-=" . er/expand-region)))
-
-(use-package indent-bars)
 
 (use-package breadcrumb)
 
@@ -291,21 +285,12 @@
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
 (require 'eglot-booster)
 (require 'vscode)
-;; (require 'dashboard)
-(require 'jumpy)
-;; (require 'visual-indentation-mode)
-
-(jumpy-mode 1)
-
-(global-set-key (kbd "C-c -")   #'jumpy-back)
-(global-set-key (kbd "C-c _") #'jumpy-forward)
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (load-theme 'github-dark-colorblind t)
 
 (global-vscode-mode 1)
 
-(require 'magit)
 (setq mode-line-right-align-edge 'right-fringe)
 (setq-default
  mode-line-format
