@@ -167,3 +167,9 @@ When enabled, records cursor locations and enables back/forward navigation."
 
 (provide 'jumpy)
 ;;; jumpy.el ends here
+
+;; (require 'jumpy)
+;; (jumpy-mode 1)
+
+;; (global-set-key (kbd "C-c -")   #'jumpy-back)
+;; (global-set-key (kbd "C-c _") #'jumpy-forward)
