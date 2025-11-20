@@ -228,7 +228,6 @@
   :config
   (customize-set-variable 'eglot-events-buffer-config '(:size 0))
   (setq eglot-events-buffer-size 0)
-  (setq eglot-stay-out-of '(flymake))
   (setq eglot-extend-to-xref t)
   (setq eglot-sync-connect 0
       eglot-autoreconnect nil
