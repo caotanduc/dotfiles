@@ -2,8 +2,28 @@
 (menu-bar-mode 0)
 (scroll-bar-mode -1)
 
+;; macos config
+(setq file-name-handler-alist nil)
+(setq blink-cursor-mode nil)
+(setq frame-inhibit-implied-resize t)
+(setq process-adaptive-read-buffering nil)
+(setq mac-option-key-is-meta t)
+(setq mac-command-key-is-meta nil)
+(setq font-lock-maximum-decoration 1)
+
 (setq inhibit-startup-screen t)
-(setq visible-bell t)
+(setq inhibit-startup-message t)
+(setq inhibit-startup-buffer-menu t)
+(setq fast-but-imprecise-scrolling t)
+(setq create-lockfiles nil)
+(setq visible-bell nil)
+
+(setq scroll-conservatively 101
+      scroll-margin 2
+      scroll-step 1)
+
+(setq gc-cons-threshold (* 100 1024 1024)
+      gc-cons-percentage 0.3)
 
 (add-to-list 'default-frame-alist `(font . "Iosevka Extended-20"))
 
@@ -19,6 +39,14 @@
 ;; (byte-recompile-directory package-user-dir nil 'force)
 
 ;; (setq load-prefer-newer t)
+;; (global-font-lock-mode -1)
+(setq bidi-inhibit-bpa t) ;; avoid expensive bidirectional checks
+(setq bidi-display-reordering nil)
+
+(setq inhibit-compacting-font-caches t)
+
+(setq redisplay-dont-pause t)
+(setq inhibit-compacting-font-caches t)
 (setq require-final-newline t)
 (global-unset-key (kbd "C-z"))
 
@@ -186,6 +214,11 @@
         (typescript  "https://github.com/tree-sitter/tree-sitter-typescript" "v0.23.1" "typescript/src")))
 
 (setq flymake-no-changes-timeout nil)
+(setq flymake-no-changes-timeout 0.2
+      flymake-start-on-save-buffer t
+      flymake-proc-allowed-file-name-masks nil) ;; don't analyze temp files
+
+(advice-add 'eglot--log-event :override #'ignore)
 
 (use-package eglot
   :hook ((eglot--managed-mode . breadcrumb-local-mode)
@@ -194,6 +227,15 @@
 	      ("<f6>" . eglot-format-buffer))
   :config
   (customize-set-variable 'eglot-events-buffer-config '(:size 0))
+  (setq eglot-events-buffer-size 0)
+  (setq eglot-stay-out-of '(flymake))
+  (setq eglot-extend-to-xref t)
+  (setq eglot-sync-connect 0
+      eglot-autoreconnect nil
+      eglot-events-buffer-size 0
+      eglot-send-changes-idle-time 0.1)
+  (setq eldoc-echo-area-use-multiline-p t)
+  (setq eldoc-idle-delay 0.2)
   (fset #'jsonrpc--log-event #'ignore)
   (setq jsonrpc-event-hook nil)
   ;; Run both basedpyright and ruff for python-ts-mode
@@ -205,7 +247,7 @@
 
   ;; rustup component add rust-analyzer
   (add-to-list 'eglot-server-programs `(rust-ts-mode . ,(eglot-alternatives '(("rust-analyzer")))))
-  (setq eglot-ignored-server-capabilities '(:codeActionProvider))
+  (setq eglot-ignored-server-capabilities '(:codeActionProvider :documentHighlightProvider :semanticTokensProvider))
 
   ;; Configure basedpyright and inlay hints
   (setq-default eglot-workspace-configuration
@@ -276,9 +318,6 @@
   (setq tab-width 4)
   (setq electric-indent-inhibit nil)
   (electric-indent-mode 1))
-
-(use-package esh-autosuggest
-  :hook (eshell-mode . esh-autosuggest-mode))
 
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
 (require 'eglot-booster)
