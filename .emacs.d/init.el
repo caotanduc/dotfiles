@@ -13,7 +13,7 @@
 ;; Display optimizations
 (setq blink-cursor-mode nil)
 (setq frame-inhibit-implied-resize t)
-(setq font-lock-maximum-decoration 1)
+;; (setq font-lock-maximum-decoration 1)
 (setq fast-but-imprecise-scrolling t)
 (setq redisplay-dont-pause t)
 
