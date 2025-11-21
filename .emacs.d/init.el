@@ -508,7 +508,3 @@
 	  (todo "NEXT"
 		((org-agenda-overriding-header "Next Tasks")))
 	  (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))))
-
-;; Org bullets
-(use-package org-bullets)
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
