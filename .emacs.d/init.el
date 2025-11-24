@@ -301,8 +301,8 @@
 (use-package eglot
   :hook ((eglot--managed-mode . breadcrumb-local-mode)
          (eglot--managed-mode . eglot-booster-mode))
-  :bind (:map eglot-mode-map ("F2" . eglot-rename)
-	      ("F6" . eglot-format-buffer))
+  :bind (:map eglot-mode-map ("f2" . eglot-rename)
+	      ("f6" . eglot-format-buffer))
   :config
   ;; Disable event logging for performance
   (customize-set-variable 'eglot-events-buffer-config '(:size 0))
