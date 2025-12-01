@@ -272,25 +272,6 @@ These structures don't have a `breadcrumb-region' property on."
   (cond ((floatp len) (* (window-width) len))
         (t len)))
 
-(defun bc--get-type-prefix (node-name)
-  "Get type prefix based on node name or parent category."
-  (let* ((parent (get-text-property 0 'breadcrumb-parent node-name))
-         (name-lower (downcase node-name))
-         (parent-lower (and parent (downcase parent))))
-    (cond
-     ;; Check parent category
-     ((and parent-lower (string-match-p "function\\|method\\|defun" parent-lower)) "[f] ")
-     ((and parent-lower (string-match-p "class\\|type\\|struct" parent-lower)) "[c] ")
-     ((and parent-lower (string-match-p "variable\\|var\\|const\\|defvar" parent-lower)) "[v] ")
-     ((and parent-lower (string-match-p "namespace\\|package\\|module" parent-lower)) "[n] ")
-     ((and parent-lower (string-match-p "interface\\|protocol" parent-lower)) "[i] ")
-     ;; Check node name patterns
-     ((string-match-p "^class " name-lower) "[c] ")
-     ((string-match-p "^def\\|^function" name-lower) "[f] ")
-     ((string-match-p "^var\\|^let\\|^const" name-lower) "[v] ")
-     ;; Default for leaf nodes (usually functions/methods)
-     (t ""))))
-
 (defun bc--format-ipath-node (p more)
   (let* ((l (lambda (&rest _event)
               (interactive)
@@ -299,11 +280,9 @@ These structures don't have a `breadcrumb-region' property on."
               ;; to be missing in these cases.  We would to
               ;; conveniently visit places near the node `p' via the
               ;; mouse
-              (breadcrumb-jump)))
-         (prefix (bc--get-type-prefix p))
-         (display-text (concat prefix p)))
+              (breadcrumb-jump))))
     (propertize
-     display-text 'mouse-face 'header-line-highlight
+     p 'mouse-face 'header-line-highlight
      'face (if more 'bc-imenu-crumbs-face 'bc-imenu-leaf-face)
      'bc-dont-shorten (null more)
      'help-echo (format "mouse-1: Go places near %s" p)
@@ -401,7 +380,10 @@ propertized crumbs."
 
 (defun bc--header-line ()
   "Helper for `breadcrumb-headerline-mode'."
-  (or (bc-imenu-crumbs) ""))
+  (let ((x (cl-remove-if
+            #'seq-empty-p (mapcar #'funcall
+                                  '(bc-project-crumbs bc-imenu-crumbs)))))
+    (mapconcat #'identity x (propertize " : " 'face 'bc-face))))
 
 ;;;###autoload
 (define-minor-mode breadcrumb-local-mode
