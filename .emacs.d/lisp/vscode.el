@@ -140,7 +140,7 @@
   (let ((map (make-sparse-keymap)))
     ;; Main bindings
     (define-key map (kbd "M-RET")           #'vscode-toggle-command)
-    (define-key map (kbd "s-F")           #'consult-ripgrep)
+    (define-key map (kbd "C-c f")           #'consult-ripgrep)
     (define-key map (kbd "C-c TAB")     #'consult-project-buffer)
     (define-key map (kbd "C-c w")         #'kill-this-buffer)
     (define-key map (kbd "s-s")           #'save-buffer)
@@ -155,6 +155,7 @@
     (define-key map (kbd "M-<up>")          #'move-text-up)
     (define-key map (kbd "M-<down>")        #'move-text-down)
     (define-key map (kbd "C-c s")           #'save-buffer-no-hooks)
+    (define-key map (kbd "C-c #")         #'consult-imenu)
     map))
 
 ;;;###autoload

@@ -13,7 +13,8 @@
 ;; Display optimizations
 (setq blink-cursor-mode nil)
 (setq frame-inhibit-implied-resize t)
-;; (setq font-lock-maximum-decoration 1)
+(setq font-lock-maximum-decoration 1)
+;; (global-font-lock-mode 0)
 (setq fast-but-imprecise-scrolling t)
 (setq redisplay-dont-pause t)
 
@@ -352,7 +353,7 @@
   ;; Language server configurations
   ;; Python: brew install pyright ruff basedpyright
   (add-to-list 'eglot-server-programs
-               `(python-ts-mode . ,(eglot-alternatives '(("pyright-langserver" "--stdio")
+               `(python-mode . ,(eglot-alternatives '(("pyright-langserver" "--stdio")
                                                           ("basedpyright-langserver" "--stdio")
                                                           ("ruff" "server")))))
 
@@ -394,14 +395,14 @@
 ;; ═════════════════════════════════════════════════════════════════════════════
 
 ;; ─── Python ──────────────────────────────────────────────────────────────────
-(use-package python-ts-mode
+(use-package python-mode
   :ensure nil
-  :hook ((python-ts-mode . display-fill-column-indicator-mode)
-	 (python-ts-mode . eglot-ensure)
-         (python-ts-mode . ruff-check-on-save-mode)
-         (python-ts-mode . ruff-organize-imports-on-save-mode)
-         (python-ts-mode . ruff-format-on-save-mode))
-  :mode (("\\.py\\'" . python-ts-mode))
+  :hook ((python-mode . display-fill-column-indicator-mode)
+	 (python-mode . eglot-ensure)
+         (python-mode . ruff-check-on-save-mode)
+         (python-mode . ruff-organize-imports-on-save-mode)
+         (python-mode . ruff-format-on-save-mode))
+  :mode (("\\.py\\'" . python-mode))
   :config
   (setq indent-tabs-mode nil)
   (setq tab-width 4)
@@ -454,9 +455,16 @@
 (require 'eglot-booster)
 (require 'vscode)
 (require 'breadcrumb)
+(require 'jumpy)
 
 ;; Enable vscode-mode globally
 (global-vscode-mode 1)
+
+;; Enable jumpy-mode globally
+(jumpy-mode 1)
+
+(global-set-key (kbd "C-c -")   #'jumpy-back)
+(global-set-key (kbd "C-c _") #'jumpy-forward)
 
 ;; ═════════════════════════════════════════════════════════════════════════════
 ;;  THEME
