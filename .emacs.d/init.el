@@ -297,6 +297,12 @@
   :init
   (global-company-mode))
 
+;; multiple cursor
+(use-package multiple-cursors
+  :bind (("C-c >" . mc/mark-next-like-this)
+	 ("C-c <" . mc/mark-previous-like-this)
+	 ("C-c C-l" . mc/mark-all-like-this)))
+
 ;; ═════════════════════════════════════════════════════════════════════════════
 ;;  TREE-SITTER CONFIGURATION
 ;; ═════════════════════════════════════════════════════════════════════════════
