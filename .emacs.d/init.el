@@ -13,7 +13,7 @@
 ;; Display optimizations
 (setq blink-cursor-mode nil)
 (setq frame-inhibit-implied-resize t)
-(setq font-lock-maximum-decoration 1)
+;; (setq font-lock-maximum-decoration 1)
 ;; (global-font-lock-mode 0)
 (setq fast-but-imprecise-scrolling t)
 (setq redisplay-dont-pause t)
@@ -407,9 +407,11 @@
 	 (python-mode . eglot-ensure)
          (python-mode . ruff-check-on-save-mode)
          (python-mode . ruff-organize-imports-on-save-mode)
+	 (python-mode . (lambda () (font-lock-mode 0)))
          (python-mode . ruff-format-on-save-mode))
   :mode (("\\.py\\'" . python-mode))
   :config
+  (font-lock-mode 0)
   (setq indent-tabs-mode nil)
   (setq tab-width 4)
   (setq electric-indent-inhibit nil)
