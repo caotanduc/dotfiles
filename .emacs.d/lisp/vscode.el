@@ -132,6 +132,24 @@
         (after-save-hook nil))
     (write-file (buffer-file-name))))
 
+(defun move-buffer-to-right-window ()
+  "Move the current buffer to the window on the right.
+
+If there is no window on the right, create one with `split-window-right'.
+The current window will then display the previous buffer (`other-buffer`)."
+  (interactive)
+  (let* ((cur-buf  (current-buffer))
+         (prev-buf (other-buffer cur-buf t))
+         (this-win (selected-window))
+         (right-win (or (window-in-direction 'right)
+                        (split-window-right))))
+    ;; Show the previous buffer in the current (left) window
+    (set-window-buffer this-win prev-buf)
+    ;; Show the current buffer in the right window
+    (set-window-buffer right-win cur-buf)
+    ;; Optionally move point to the right window
+    (select-window right-win)))
+
 ;; ─────────────────────────────────────────────────────────────
 ;; Minor Mode Definition
 ;; ─────────────────────────────────────────────────────────────
@@ -139,23 +157,24 @@
 (defvar vscode-mode-map
   (let ((map (make-sparse-keymap)))
     ;; Main bindings
-    (define-key map (kbd "M-RET")           #'vscode-toggle-command)
-    (define-key map (kbd "C-c f")           #'consult-ripgrep)
+    (define-key map (kbd "M-RET")       #'vscode-toggle-command)
+    (define-key map (kbd "C-c f")       #'consult-ripgrep)
     (define-key map (kbd "C-c TAB")     #'consult-project-buffer)
-    (define-key map (kbd "C-c w")         #'kill-this-buffer)
-    (define-key map (kbd "s-s")           #'save-buffer)
-    (define-key map (kbd "s-E")           #'vscode-open-explorer)
-    (define-key map (kbd "C-o")           #'vscode-insert-line-below)
-    (define-key map (kbd "C-c o")  #'vscode-insert-line-above)
-    (define-key map (kbd "C-c d")         #'vscode-mark-whole-word)
-    (define-key map (kbd "C-c l")         #'vscode-mark-whole-line)
-    (define-key map (kbd "C-c \\")        #'vscode-find-cursor)
-    (define-key map (kbd "C-c /")         #'comment-line)
-    (define-key map (kbd "C-c k w")       #'vscode-kill-other-buffers)
-    (define-key map (kbd "M-<up>")          #'move-text-up)
-    (define-key map (kbd "M-<down>")        #'move-text-down)
-    (define-key map (kbd "C-c s")           #'save-buffer-no-hooks)
-    (define-key map (kbd "C-c #")         #'consult-imenu)
+    (define-key map (kbd "C-c w")       #'kill-this-buffer)
+    (define-key map (kbd "s-s")         #'save-buffer)
+    (define-key map (kbd "s-E")         #'vscode-open-explorer)
+    (define-key map (kbd "C-o")         #'vscode-insert-line-below)
+    (define-key map (kbd "C-c o")	#'vscode-insert-line-above)
+    (define-key map (kbd "C-c d")       #'vscode-mark-whole-word)
+    (define-key map (kbd "C-c l")       #'vscode-mark-whole-line)
+    (define-key map (kbd "C-c \\")      #'vscode-find-cursor)
+    (define-key map (kbd "C-c /")       #'comment-line)
+    (define-key map (kbd "C-c k w")     #'vscode-kill-other-buffers)
+    (define-key map (kbd "M-<up>")      #'move-text-up)
+    (define-key map (kbd "M-<down>")    #'move-text-down)
+    (define-key map (kbd "C-c s")       #'save-buffer-no-hooks)
+    (define-key map (kbd "C-c #")       #'consult-imenu)
+    (define-key map (kbd "C-c L")	#'move-buffer-to-right-window)
     map))
 
 ;;;###autoload
