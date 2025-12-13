@@ -88,6 +88,7 @@
 (setq tab-always-indent 'complete)
 (setq require-final-newline t)
 (setq create-lockfiles nil)
+(pending-delete-mode t)
 
 ;; Auto-revert files when changed externally
 (global-auto-revert-mode t)
@@ -100,6 +101,9 @@
 
 ;; Eshell
 (setq eshell-destroy-buffer-when-process-dies t)
+
+;; Dired
+(setq dired-dwim-target t)
 
 ;; ═════════════════════════════════════════════════════════════════════════════
 ;;  FILE MANAGEMENT
@@ -426,7 +430,8 @@
 ;; ─── TypeScript ──────────────────────────────────────────────────────────────
 (use-package typescript-ts-mode
   :ensure nil
-  :mode (("\\.ts\\'" . typescript-ts-mode)))
+  :mode (("\\.ts\\'" . typescript-ts-mode))
+  :hook ((typescript-ts-mode . (lambda () (font-lock-mode 0)))))
 
 ;; ─── JavaScript ──────────────────────────────────────────────────────────────
 (use-package js-ts-mode
