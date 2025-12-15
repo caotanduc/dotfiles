@@ -309,9 +309,6 @@
 	 ("C-c <" . mc/mark-previous-like-this)
 	 ("C-c C-l" . mc/mark-all-like-this)))
 
-(use-package dumb-jump)
-(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
-
 ;; ═════════════════════════════════════════════════════════════════════════════
 ;;  TREE-SITTER CONFIGURATION
 ;; ═════════════════════════════════════════════════════════════════════════════
