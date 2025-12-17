@@ -365,7 +365,7 @@
   ;; Language server configurations
   ;; Python: brew install pyright ruff basedpyright
   (add-to-list 'eglot-server-programs
-               `(python-mode . ,(eglot-alternatives '(("pyright-langserver" "--stdio")
+               `(simp-python-mode . ,(eglot-alternatives '(("pyright-langserver" "--stdio")
                                                           ("basedpyright-langserver" "--stdio")
                                                           ("ruff" "server")))))
 
@@ -407,21 +407,14 @@
 ;; ═════════════════════════════════════════════════════════════════════════════
 
 ;; ─── Python ──────────────────────────────────────────────────────────────────
-(use-package python-mode
+(use-package simp-python-mode
   :ensure nil
-  :hook ((python-mode . display-fill-column-indicator-mode)
-	 (python-mode . eglot-ensure)
-         (python-mode . ruff-check-on-save-mode)
-         (python-mode . ruff-organize-imports-on-save-mode)
-	 (python-mode . (lambda () (font-lock-mode 0)))
-         (python-mode . ruff-format-on-save-mode))
-  :mode (("\\.py\\'" . python-mode))
-  :config
-  (font-lock-mode 0)
-  (setq indent-tabs-mode nil)
-  (setq tab-width 4)
-  (setq electric-indent-inhibit nil)
-  (electric-indent-mode 1))
+  :hook ((simp-python-mode . display-fill-column-indicator-mode)
+	 (simp-python-mode . eglot-ensure)
+	 (simp-python-mode . ruff-check-on-save-mode)
+	 (simp-python-mode . ruff-organize-imports-on-save-mode)
+	 (simp-python-mode . ruff-format-on-save-mode))
+  :mode (("\\.py\\'" . simp-python-mode)))
 
 ;; ─── Rust ────────────────────────────────────────────────────────────────────
 (use-package rust-ts-mode
