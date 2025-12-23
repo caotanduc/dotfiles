@@ -26,7 +26,7 @@
   :group 'languages)
 
 ;;;###autoload
-(define-derived-mode simp-python-mode prog-mode "SimpPython"
+(define-derived-mode simp-python-mode python-mode "SimpPython"
   "A minimal, fast Python mode without heavy syntax processing."
 
   ;; -----------------
