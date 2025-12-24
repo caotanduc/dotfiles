@@ -150,6 +150,43 @@ The current window will then display the previous buffer (`other-buffer`)."
     ;; Optionally move point to the right window
     (select-window right-win)))
 
+
+(defun select-inside (char)
+  "Select text inside matching CHAR delimiters.
+
+CHAR can be one of: ' \" ( [ {"
+  (interactive "cSelect inside char: ")
+  (let (beg end)
+    (cond
+     ;; Strings
+     ((memq char '(?\" ?\'))
+      (let ((ppss (syntax-ppss)))
+        ;; If inside string, use current string
+        (unless (nth 3 ppss)
+          (error "Not inside a string"))
+        (setq beg (1+ (nth 8 ppss)))
+        (save-excursion
+          (goto-char (nth 8 ppss))
+          (forward-sexp)
+          (setq end (1- (point))))))
+
+     ;; Pairs: (), [], {}
+     ((memq char '(?\( ?\[ ?\{))
+      (save-excursion
+        ;; Move to opening delimiter if needed
+        (unless (looking-at-p (regexp-quote (string char)))
+          (backward-up-list))
+        (setq beg (1+ (point)))
+        (forward-sexp)
+        (setq end (1- (point)))))
+
+     (t
+      (error "Unsupported char: %c" char)))
+
+    (goto-char beg)
+    (set-mark end)
+    (activate-mark)))
+
 ;; ─────────────────────────────────────────────────────────────
 ;; Minor Mode Definition
 ;; ─────────────────────────────────────────────────────────────
@@ -175,6 +212,11 @@ The current window will then display the previous buffer (`other-buffer`)."
     (define-key map (kbd "C-c s")       #'save-buffer-no-hooks)
     (define-key map (kbd "C-c #")       #'consult-imenu)
     (define-key map (kbd "C-c L")	#'move-buffer-to-right-window)
+    (global-set-key (kbd "C-c i '") (lambda () (interactive) (select-inside ?\')))
+    (global-set-key (kbd "C-c i \"") (lambda () (interactive) (select-inside ?\")))
+    (global-set-key (kbd "C-c i (") (lambda () (interactive) (select-inside ?\()))
+    (global-set-key (kbd "C-c i [") (lambda () (interactive) (select-inside ?\[)))
+    (global-set-key (kbd "C-c i {") (lambda () (interactive) (select-inside ?\{)))
     map))
 
 ;;;###autoload
