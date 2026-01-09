@@ -305,8 +305,8 @@
 
 ;; multiple cursor
 (use-package multiple-cursors
-  :bind (("C-c >" . mc/mark-next-like-this)
-	 ("C-c <" . mc/mark-previous-like-this)
+  :bind (("C-c n" . mc/mark-next-like-this)
+	 ("C-c p" . mc/mark-previous-like-this)
 	 ("C-c C-l" . mc/mark-all-like-this)))
 
 ;; ═════════════════════════════════════════════════════════════════════════════
@@ -431,17 +431,32 @@
 ;; ─── JavaScript ──────────────────────────────────────────────────────────────
 (use-package js-ts-mode
   :ensure nil
-  :mode (("\\.js\\'" . js-ts-mode)))
+  :mode (("\\.js\\'" . js-ts-mode))
+  :hook
+  (js-ts-mode . (lambda ()
+                  (setq-local tab-width 2)
+                  (setq-local js-indent-level 2)
+                  (setq-local indent-tabs-mode nil))))
 
 ;; ─── HTML ────────────────────────────────────────────────────────────────────
 (use-package html-ts-mode
   :ensure nil
-  :mode (("\\.html\\'" . html-ts-mode)))
+  :mode (("\\.html\\'" . html-ts-mode))
+  :hook
+  (html-ts-mode . (lambda ()
+                    (setq-local tab-width 2)
+                    (setq-local sgml-basic-offset 2)
+                    (setq-local indent-tabs-mode nil))))
 
 ;; ─── CSS ─────────────────────────────────────────────────────────────────────
 (use-package css-ts-mode
   :ensure nil
-  :mode (("\\.css\\'" . css-ts-mode)))
+  :mode (("\\.css\\'" . css-ts-mode))
+  :hook
+  (css-ts-mode . (lambda ()
+                   (setq-local tab-width 2)
+                   (setq-local css-indent-offset 2)
+                   (setq-local indent-tabs-mode nil))))
 
 ;; ─── YAML ────────────────────────────────────────────────────────────────────
 (use-package yaml-ts-mode
