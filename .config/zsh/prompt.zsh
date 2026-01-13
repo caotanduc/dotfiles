@@ -24,8 +24,15 @@ preexec() {
 autoload -Uz vcs_info
 
 zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:git:*' formats '(%b)'
-zstyle ':vcs_info:git:*' actionformats '(%b|%a)'
+zstyle ':vcs_info:*' check-for-changes true
+
+# Show * if there are changes
+zstyle ':vcs_info:git:*' formats '(%b%u%c)'
+zstyle ':vcs_info:git:*' actionformats '(%b|%a%u%c)'
+
+# Symbols for changes
+zstyle ':vcs_info:git:*' unstagedstr '*'
+zstyle ':vcs_info:git:*' stagedstr '+'
 
 precmd() {
   vcs_info
@@ -33,12 +40,7 @@ precmd() {
 
 git_prompt_info() {
   [[ -n "$vcs_info_msg_0_" ]] || return
-
-  if git diff --quiet 2>/dev/null && git diff --cached --quiet 2>/dev/null; then
-    echo "%{$fg[yellow]%}${vcs_info_msg_0_}%{$reset_color%} "
-  else
-    echo "%{$fg[yellow]%}${vcs_info_msg_0_}%{$fg[red]%}*%{$reset_color%} "
-  fi
+  echo "%{$fg[yellow]%}${vcs_info_msg_0_}%{$reset_color%} "
 }
 
 # -------------------------------------------------------------

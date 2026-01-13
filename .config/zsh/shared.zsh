@@ -7,7 +7,7 @@ export TERM="xterm-256color"
 # ========================
 # Files
 # ========================
-# source $ZSH_CFG/prompt.zsh
+source $ZSH_CFG/prompt.zsh
 source $ZSH_CFG/completion.zsh
 source $ZSH_CFG/options.zsh
 source $ZSH_CFG/envs.zsh
@@ -19,6 +19,8 @@ source $ZSH_CFG/aliases.zsh
 # ========================
 # Tools
 # ========================
+source $ZSH_CFG/tools/zsh-autosuggestions.zsh
+source $ZSH_CFG/tools/zoxide.zsh
 source $ZSH_CFG/tools/conda.zsh
 source $ZSH_CFG/tools/nvm.zsh
 source $ZSH_CFG/tools/bun.zsh

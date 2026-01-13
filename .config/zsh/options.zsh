@@ -1,5 +1,5 @@
 setopt autocd
-setopt correct
+# setopt correct
 setopt interactivecomments
 setopt globdots
 setopt nobeep
