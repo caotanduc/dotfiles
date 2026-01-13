@@ -1,6 +1,11 @@
-# Initialize completion system
+# Initialize completion system with caching
+# Only regenerate .zcompdump once a day for faster startup
 autoload -Uz compinit
-compinit
+if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
 
 # Completion styles
 zstyle ':completion:*' menu select

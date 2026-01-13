@@ -4,6 +4,9 @@
 export EDITOR="emacsclient -nw"
 export TERM="xterm-256color"
 
+# Cache brew prefix (only call once - this is slow!)
+export BREW_PREFIX="$(brew --prefix)"
+
 # ========================
 # Files
 # ========================
