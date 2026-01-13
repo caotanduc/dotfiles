@@ -7,6 +7,7 @@ export TERM="xterm-256color"
 # ========================
 # Files
 # ========================
+# source $ZSH_CFG/prompt.zsh
 source $ZSH_CFG/completion.zsh
 source $ZSH_CFG/options.zsh
 source $ZSH_CFG/envs.zsh
