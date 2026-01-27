@@ -371,7 +371,7 @@
 
   ;; Rust: rustup component add rust-analyzer
   (add-to-list 'eglot-server-programs
-               `(rust-ts-mode . ,(eglot-alternatives '(("rust-analyzer")))))
+               `(simp-rust-mode . ,(eglot-alternatives '(("rust-analyzer")))))
 
   ;; Workspace configuration
   (setq-default eglot-workspace-configuration
@@ -413,14 +413,18 @@
 	 (simp-python-mode . eglot-ensure)
 	 (simp-python-mode . ruff-check-on-save-mode)
 	 (simp-python-mode . ruff-organize-imports-on-save-mode)
-	 (simp-python-mode . ruff-format-on-save-mode))
+	 (simp-python-mode . ruff-format-on-save-mode)
+	 (simp-python-mode . (lambda () (setq-local tab-width 4))))
   :mode (("\\.py\\'" . simp-python-mode)))
 
 ;; ─── Rust ────────────────────────────────────────────────────────────────────
-(use-package rust-ts-mode
+(use-package simp-rust-mode
   :ensure nil
-  :hook ((rust-ts-mode . eglot-ensure))
-  :mode (("\\.rs\\'" . rust-ts-mode)))
+  :hook ((simp-rust-mode . display-fill-column-indicator-mode)
+	 (simp-rust-mode . eglot-ensure)
+	 (simp-rust-mode . (lambda () (setq-local tab-width 4))))
+  :mode (("\\.rs\\'" . simp-rust-mode)))
+
 
 ;; ─── TypeScript ──────────────────────────────────────────────────────────────
 (use-package typescript-ts-mode
