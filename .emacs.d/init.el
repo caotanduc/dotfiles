@@ -487,12 +487,16 @@
 (require 'vscode)
 (require 'breadcrumb)
 (require 'jumpy)
-(require 'claude-tmux)
 
-(setq claude-tmux-file-reference-format "@%s")
-(setq claude-tmux-switch-after-send t)
-(global-set-key (kbd "C-c c f") #'claude-tmux-send-file-reference)
-(global-set-key (kbd "C-c c t") #'claude-tmux-dispatch)
+(use-package claude-tmux
+  :vc (:url "https://github.com/caotanduc/claude-tmux"
+	    :rev :newest)
+  :custom
+  (claude-tmux-file-reference-format "@%s")
+  (claude-tmux-switch-after-send t)
+  :bind
+  ("C-c c f" . claude-tmux-send-file-reference)
+  ("C-c c t" . claude-tmux-dispatch))
 
 ;; Enable vscode-mode globally
 (global-vscode-mode 1)
