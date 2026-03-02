@@ -496,6 +496,7 @@
   (claude-tmux-switch-after-send t)
   :bind
   ("C-c c f" . claude-tmux-send-file-reference)
+  ("C-c c l" . claude-tmux-send-file-reference-with-lines)
   ("C-c c t" . claude-tmux-dispatch))
 
 ;; Enable vscode-mode globally
