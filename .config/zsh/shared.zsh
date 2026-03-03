@@ -4,6 +4,9 @@
 export EDITOR="emacsclient -nw"
 export TERM="xterm-256color"
 
+# Set $PATH
+source $ZSH_CFG/paths.zsh
+
 # Cache brew prefix (only call once - this is slow!)
 export BREW_PREFIX="$(brew --prefix)"
 
@@ -16,7 +19,6 @@ source $ZSH_CFG/options.zsh
 source $ZSH_CFG/envs.zsh
 source $ZSH_CFG/functions.zsh
 source $ZSH_CFG/keybindings.zsh
-source $ZSH_CFG/paths.zsh
 source $ZSH_CFG/aliases.zsh
 
 # ========================
