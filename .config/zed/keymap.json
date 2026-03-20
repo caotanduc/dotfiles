@@ -1,0 +1,25 @@
+[
+  {
+    "bindings": {
+      "ctrl-space c": "workspace::NewCenterTerminal",
+    },
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-~": null,
+    },
+  },
+  {
+    "context": "Terminal",
+    "bindings": {
+      "cmd-n": null,
+    },
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-`": null,
+    },
+  },
+]

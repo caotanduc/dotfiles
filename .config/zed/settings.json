@@ -1,0 +1,140 @@
+{
+  "agent": {
+    "button": false,
+    "favorite_models": [],
+    "model_parameters": [],
+  },
+  "notification_panel": {
+    "button": false,
+  },
+  "active_pane_modifiers": {
+    "border_size": 0.5,
+  },
+  "bottom_dock_layout": "full",
+  "auto_install_extensions": {
+    "github-theme": true,
+    "html": true,
+    "dockerfile": true,
+    "docker-compose": true,
+  },
+  "auto_signature_help": true,
+  "base_keymap": "Emacs",
+  "buffer_font_family": "Iosevka Fixed",
+  "buffer_font_size": 18,
+  "buffer_line_height": {
+    "custom": 1.7,
+  },
+  "close_on_file_delete": true,
+  "disable_ai": true,
+  "current_line_highlight": "none",
+  "cursor_blink": true,
+  "cursor_shape": "block",
+  "gutter": {
+    "line_numbers": false,
+    "breakpoints": false,
+  },
+  "hide_mouse": "on_typing_and_movement",
+  "scrollbar": {
+    "show": "never",
+  },
+  "tab_bar": {
+    "show": false,
+  },
+  "toolbar": {
+    "breadcrumbs": true,
+    "quick_actions": false,
+  },
+  "status_bar": {
+    "active_language_button": true,
+    "line_endings_button": true,
+  },
+  "format_on_save": "on",
+  "diagnostics": {
+    "include_warnings": true,
+    "inline": {
+      "enabled": true,
+      "padding": 10,
+      // "min_column": 80,
+    },
+  },
+  "git": {
+    "git_gutter": "tracked_files",
+    "inline_blame": {
+      "enabled": true,
+      // "min_column": 80,
+      "show_commit_summary": true,
+    },
+    "branch_picker": {
+      "show_author_name": true,
+    },
+    "hunk_style": "staged_hollow",
+  },
+  "indent_guides": {
+    "enabled": true,
+    "line_width": 1,
+    "active_line_width": 4,
+    "coloring": "indent_aware",
+    "background_coloring": "disabled",
+  },
+  "inlay_hints": {
+    "enabled": true,
+  },
+  "search": {
+    "button": false,
+  },
+  "use_smartcase_search": true,
+  "show_call_status_icon": false,
+  "show_whitespaces": "trailing",
+  "use_system_path_prompts": false,
+  "use_system_prompts": false,
+  "redact_private_values": false,
+  "which_key": {
+    "enabled": true,
+    "delay_ms": 500,
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false,
+  },
+  "terminal": {
+    "max_scroll_history_lines": 30000,
+    "minimum_contrast": 45.0,
+    "alternate_scroll": "off",
+    "blinking": "on",
+    "font_family": "Iosevka Term",
+    "font_size": 18,
+    "option_as_meta": true,
+    "working_directory": "current_project_directory",
+  },
+  "title_bar": {
+    "show_branch_icon": true,
+    "show_branch_name": true,
+    "show_project_items": true,
+    "show_onboarding_banner": false,
+    "show_sign_in": false,
+  },
+  "project_panel": {
+    "dock": "right",
+    "show_diagnostics": "all",
+  },
+  "collaboration_panel": {
+    "button": false,
+    "dock": "right",
+  },
+  "debugger": {
+    "dock": "right",
+  },
+  "git_panel": {
+    "status_style": "icon",
+    "collapse_untracked_diff": false,
+    "dock": "right",
+  },
+  "outline_panel": {
+    "dock": "right",
+  },
+  "colorize_brackets": true,
+  "ui_font_family": "Iosevka Fixed",
+  "ui_font_size": 18,
+  "theme": "GitHub Dark Colorblind",
+  "wrap_guides": [80],
+}
