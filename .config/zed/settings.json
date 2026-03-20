@@ -67,7 +67,7 @@
     "branch_picker": {
       "show_author_name": true,
     },
-    "hunk_style": "staged_hollow",
+    "hunk_style": "unstaged_hollow",
   },
   "indent_guides": {
     "enabled": true,
