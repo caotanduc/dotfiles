@@ -98,7 +98,7 @@
   },
   "terminal": {
     "max_scroll_history_lines": 30000,
-    "minimum_contrast": 45.0,
+    "minimum_contrast": 0,
     "alternate_scroll": "off",
     "blinking": "on",
     "font_family": "Iosevka Term",
