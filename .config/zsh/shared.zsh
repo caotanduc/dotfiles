@@ -1,7 +1,14 @@
 # ========================
 # Core
 # ========================
-export EDITOR="emacsclient -nw"
+case "$TERM_PROGRAM" in
+  zed)
+    export EDITOR="zed --wait"
+    ;;
+  ghostty)
+      export EDITOR="emacs -nw"
+    ;;
+esac
 export TERM="xterm-256color"
 
 # Set $PATH
