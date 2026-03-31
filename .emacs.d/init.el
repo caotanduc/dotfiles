@@ -494,6 +494,7 @@
   :custom
   (claude-tmux-file-reference-format "@%s")
   (claude-tmux-switch-after-send t)
+  (claude-tmux-press-enter-after-send nil)
   :bind
   ("C-c c f" . claude-tmux-send-file-reference)
   ("C-c c l" . claude-tmux-send-file-reference-with-lines)

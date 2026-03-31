@@ -16,8 +16,10 @@ ssm() {
   local profile="${1:-bruno}"
   local region="${2:-ap-southeast-1}"
 
-  # SSO login (will only prompt if needed)
-  aws sso login --profile "$profile" >/dev/null
+  # Check if credentials are valid; if not, trigger SSO login
+  if ! aws sts get-caller-identity --profile "$profile" &>/dev/null; then
+    aws sso login --profile "$profile" || return 1
+  fi
 
   # Get instances as JSON
   local json
