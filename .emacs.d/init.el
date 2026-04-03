@@ -513,7 +513,10 @@
 ;;  THEME
 ;; ═════════════════════════════════════════════════════════════════════════════
 
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+(use-package github-dark-colorblind-theme
+  :vc (:url "https://github.com/caotanduc/github-dark-colorblind-theme"
+            :rev :newest))
+
 (load-theme 'github-dark-colorblind t)
 
 ;; ═════════════════════════════════════════════════════════════════════════════
