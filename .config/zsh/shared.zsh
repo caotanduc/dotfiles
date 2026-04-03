@@ -7,6 +7,9 @@ case "$TERM_PROGRAM" in
     ;;
   ghostty)
       export EDITOR="emacs -nw"
+      if [ -z "${TMUX:-}" ]; then
+	  eval ~/utils/project-switcher.sh
+      fi
     ;;
 esac
 export TERM="xterm-256color"
