@@ -24,14 +24,13 @@ vim.pack.add({
     { src = "https://github.com/ibhagwan/fzf-lua" },
     { src = "https://github.com/echasnovski/mini.pairs" },
     { src = "https://github.com/nvim-lua/plenary.nvim" }, -- required
-    { src = "https://github.com/NeogitOrg/neogit" },
+    { src = "https://github.com/tpope/vim-fugitive" },
     { src = "https://github.com/projekt0n/github-nvim-theme" }
 })
 
 vim.cmd.colorscheme('github_dark_colorblind')
 
-require("neogit").setup()
-vim.keymap.set("n", "<leader>gg", "<cmd>Neogit<CR>")
+vim.keymap.set("n", "<leader>gg", "<cmd>Git<CR>")
 
 require("mini.pairs").setup({
     modes = { insert = true, command = false, terminal = false },
