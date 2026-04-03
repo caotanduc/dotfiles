@@ -337,8 +337,7 @@
 
 ;; Eglot
 (use-package eglot
-  :hook ((eglot--managed-mode . breadcrumb-local-mode)
-         (eglot--managed-mode . eglot-booster-mode))
+  :hook ((eglot--managed-mode . breadcrumb-local-mode))
   :bind (:map eglot-mode-map ("<f2>" . eglot-rename)
 	      ("<f6>" . eglot-format-buffer))
   :config
@@ -482,10 +481,12 @@
 ;;  CUSTOM LIBRARIES
 ;; ═════════════════════════════════════════════════════════════════════════════
 
+(use-package breadcrumb
+  :vc (:url "https://github.com/caotanduc/breadcrumb"
+	    :rev :newest))
+
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
-(require 'eglot-booster)
 (require 'vscode)
-(require 'breadcrumb)
 (require 'jumpy)
 
 (use-package claude-tmux
