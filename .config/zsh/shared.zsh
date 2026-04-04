@@ -1,3 +1,11 @@
+# Set $PATH
+source $ZSH_CFG/paths.zsh
+
+export TERM="xterm-256color"
+
+# Cache brew prefix (only call once - this is slow!)
+export BREW_PREFIX="$(brew --prefix)"
+
 # ========================
 # Core
 # ========================
@@ -12,13 +20,6 @@ case "$TERM_PROGRAM" in
       fi
     ;;
 esac
-export TERM="xterm-256color"
-
-# Set $PATH
-source $ZSH_CFG/paths.zsh
-
-# Cache brew prefix (only call once - this is slow!)
-export BREW_PREFIX="$(brew --prefix)"
 
 # ========================
 # Files
