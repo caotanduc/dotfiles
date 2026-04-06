@@ -12,10 +12,6 @@
       "rev": "b7fde3719340946feb75017ef9d75edebdeb0566",
       "src": "https://github.com/echasnovski/mini.pairs"
     },
-    "neogit": {
-      "rev": "4681c1fdac1b730592ae195576e87406f7255750",
-      "src": "https://github.com/NeogitOrg/neogit"
-    },
     "oil.nvim": {
       "rev": "0fcc83805ad11cf714a949c98c605ed717e0b83e",
       "src": "https://github.com/stevearc/oil.nvim"
