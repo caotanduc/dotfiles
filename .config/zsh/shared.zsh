@@ -19,6 +19,9 @@ case "$TERM_PROGRAM" in
 	  eval ~/utils/project-switcher.sh
       fi
     ;;
+  *)
+    export EDITOR="emacs -nw"
+    ;;
 esac
 
 # ========================
