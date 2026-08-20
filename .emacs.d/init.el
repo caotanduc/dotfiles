@@ -327,6 +327,15 @@
 ;;  LSP / EGLOT CONFIGURATION
 ;; ═════════════════════════════════════════════════════════════════════════════
 
+(use-package dumb-jump
+  :custom
+  (dumb-jump-prefer-searcher 'rg)
+  (xref-show-definitions-function #'consult-xref)
+  :config
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+
+(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+
 ;; Flymake settings
 (setq flymake-no-changes-timeout 0.2
       flymake-start-on-save-buffer t
@@ -409,7 +418,7 @@
 (use-package simp-python-mode
   :ensure nil
   :hook ((simp-python-mode . display-fill-column-indicator-mode)
-	 (simp-python-mode . eglot-ensure)
+	 ;; (simp-python-mode . eglot-ensure)
 	 (simp-python-mode . ruff-check-on-save-mode)
 	 (simp-python-mode . ruff-organize-imports-on-save-mode)
 	 (simp-python-mode . ruff-format-on-save-mode)
