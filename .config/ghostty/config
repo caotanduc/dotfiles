@@ -2,14 +2,17 @@ maximize = true
 
 theme = GitHub Dark Colorblind
 adjust-cell-height = 30%
+adjust-cell-width = 8%
 macos-hidden = never
 macos-icon = paper
 
 confirm-close-surface = false
 quit-after-last-window-closed = true
 
-font-family = Iosevka Medium Extended
-font-size = 15
+# font-family = Iosevka Medium Extended
+font-family = Terminus (TTF)
+font-style = "Bold"
+font-size = 18
 font-feature = -calt,-liga,-dlig
 
 macos-titlebar-style = hidden

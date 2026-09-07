@@ -50,7 +50,8 @@
       scroll-step 1)
 
 ;; Font configuration
-(add-to-list 'default-frame-alist `(font . "Iosevka Extended-20"))
+;; (add-to-list 'default-frame-alist `(font . "Iosevka Extended-20"))
+(add-to-list 'default-frame-alist `(font . "Terminus (TTF)-20"))
 
 ;; Frame size
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
@@ -284,7 +285,32 @@
 ;;  VERSION CONTROL
 ;; ═════════════════════════════════════════════════════════════════════════════
 
-(use-package magit)
+(use-package magit
+  :custom
+  (magit-ediff-dwim-show-on-hunks t))
+
+(use-package ediff
+  :ensure nil                     ; built-in
+  :defer t
+  :custom
+  (ediff-auto-refine 'on)
+  (ediff-auto-refine-limit 10000)
+  (ediff-window-setup-function #'ediff-setup-windows-plain)
+  (ediff-split-window-function #'split-window-horizontally)
+  :hook
+  (ediff-startup . my/ediff-jump-to-first-difference)
+  :init
+  (defun my/ediff-jump-to-first-difference ()
+    (ediff-jump-to-difference 1))
+
+  (defun my/ediff-disable-y-or-n-p (orig-fun &rest args)
+    "Auto-confirm `y-or-n-p' prompts while ORIG-FUN runs."
+    (require 'cl-lib)
+    (cl-letf (((symbol-function 'y-or-n-p) (lambda (_prompt) t)))
+      (apply orig-fun args)))
+  :config
+  (setq-default ediff-forward-word-function #'forward-char)
+  (advice-add 'ediff-quit :around #'my/ediff-disable-y-or-n-p))
 
 ;; Magit display settings
 (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
@@ -497,6 +523,9 @@
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
 (require 'vscode)
 (require 'jumpy)
+(require 'glow-preview)
+(global-set-key (kbd "C-c g") #'glow-preview-popup)
+(global-set-key (kbd "C-c G") #'glow-preview-mode)
 
 (use-package claude-tmux
   :vc (:url "https://github.com/caotanduc/claude-tmux"
@@ -551,3 +580,19 @@
    mode-line-format-right-align
    "Ln: %l "
    mode-line-end-spaces))
+
+;; (setq magit-ediff-dwim-show-on-hunks t)
+;; (setq ediff-auto-refine 'on
+;;       ediff-auto-refine-limit 10000)
+
+;; (setq ediff-window-setup-function #'ediff-setup-windows-plain
+;;       ediff-split-window-function #'split-window-horizontally)
+
+;; (add-hook 'ediff-startup-hook (lambda () (ediff-jump-to-difference 1)))
+
+;; (defun disable-y-or-n-p (orig-fun &rest args)
+;;   (cl-letf (((symbol-function 'y-or-n-p) (lambda (prompt) t)))
+;;     (apply orig-fun args)))
+
+;; (advice-add 'ediff-quit :around #'disable-y-or-n-p)
+;; (setq-default ediff-forward-word-function 'forward-char)
