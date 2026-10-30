@@ -1,6 +1,13 @@
+;; -*- lexical-binding: t; -*-
+
+(setenv "MACOSX_DEPLOYMENT_TARGET" "27.0")
+
 ;; ═════════════════════════════════════════════════════════════════════════════
 ;;  PERFORMANCE & STARTUP OPTIMIZATIONS
 ;; ═════════════════════════════════════════════════════════════════════════════
+
+;; (setq native-comp-async-jobs-number 0) ; Disables background compilation
+;; (setq package-install-upgrade-built-in t)
 
 ;; Reduce GC frequency during startup
 (setq gc-cons-threshold (* 100 1024 1024)
@@ -101,6 +108,9 @@
 ;; Fill column indicator
 (setq-default display-fill-column-indicator-column 79)
 (set-face-attribute 'fill-column-indicator nil :background 'unspecified :foreground "grey90")
+
+;; Shell
+(setq shell-kill-buffer-on-exit t)
 
 ;; Eshell
 (setq eshell-destroy-buffer-when-process-dies t)
@@ -210,31 +220,6 @@
   :init
   (marginalia-mode))
 
-;; ─── Embark ──────────────────────────────────────────────────────────────────
-(use-package embark
-  :bind
-  (("C-c ." . embark-act)         ;; pick some comfortable binding
-   ("C-c ;" . embark-dwim)        ;; good alternative: M-.
-   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
-
-  :init
-
-  ;; Optionally replace the key help with a completing-read interface
-  (setq prefix-help-command #'embark-prefix-help-command)
-  :config
-
-  ;; Hide the mode line of the Embark live/completions buffers
-  (add-to-list 'display-buffer-alist
-               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                 nil
-                 (window-parameters (mode-line-format . none)))))
-
-;; Consult users will also want the embark-consult package.
-(use-package embark-consult
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
-
-
 ;; ─── Consult ─────────────────────────────────────────────────────────────────
 (use-package consult
   :bind (;; C-x bindings in `ctl-x-map'
@@ -335,19 +320,53 @@
 	 ("C-c p" . mc/mark-previous-like-this)
 	 ("C-c C-l" . mc/mark-all-like-this)))
 
+(use-package ghostel
+  :bind (("C-x m" . ghostel)
+	 :map ghostel-semi-char-mode-map
+	 ("C-s" . consult-line)
+	 ("C-k" . my/ghostel-send-C-k-and-kill)
+	 ("M-p" . (lambda () (interactive) (ghostel-send-key "p" "ctrl")))
+	 ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl"))))
+  :config
+  (defun my/ghostel-send-C-k-and-kill ()
+    "Send `C-k' to ghostel
+	Like normal Emacs `C-k'. Kill to end of line and put content in kill-ring"
+    (interactive)
+    (kill-ring-save (point) (line-end-position))
+    (ghostel-send-key "k" "ctrl"))
+
+  (add-to-list 'ghostel-eval-cmds '("magit-status-setup-buffer" magit-status-setup-buffer)))
+
+(use-package project
+  :ensure nil
+  :bind (:map project-prefix-map
+         ("m" . ghostel-project)
+         ("M" . ghostel-project-list-buffers))
+  :config
+  (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t)
+  (add-to-list 'project-switch-commands '(ghostel-project-list-buffers "Ghostel buffers") t))
+
+(use-package consult-ghostel
+  :hook (after-init . consult-ghostel-mode)
+  :bind (("C-x m" . consult-ghostel)
+         ;; :map project-prefix-map
+         ;; ("m" . consult-ghostel-project)
+         :map ghostel-semi-char-mode-map
+         ("C-c h" . consult-ghostel-history)))
+
 ;; ═════════════════════════════════════════════════════════════════════════════
 ;;  TREE-SITTER CONFIGURATION
 ;; ═════════════════════════════════════════════════════════════════════════════
 
-(setq treesit-language-source-alist
-      '((python      "https://github.com/tree-sitter/tree-sitter-python" "v0.23.6")
-	(rust        "https://github.com/tree-sitter/tree-sitter-rust" "v0.23.3")
-	(yaml        "https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.2")
-	(dockerfile  "https://github.com/camdencheek/tree-sitter-dockerfile")
-	(html        "https://github.com/tree-sitter/tree-sitter-html")
-        (css         "https://github.com/tree-sitter/tree-sitter-css" "v0.23.2")
-        (javascript  "https://github.com/tree-sitter/tree-sitter-javascript" "v0.23.1")
-        (typescript  "https://github.com/tree-sitter/tree-sitter-typescript" "v0.23.1" "typescript/src")))
+;; (setq treesit-language-source-alist
+;;       '((python      "https://github.com/tree-sitter/tree-sitter-python" "v0.23.6")
+;; 	(rust        "https://github.com/tree-sitter/tree-sitter-rust" "v0.23.3")
+;; 	(yaml        "https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.2")
+;; 	(dockerfile  "https://github.com/camdencheek/tree-sitter-dockerfile")
+;; 	(html        "https://github.com/tree-sitter/tree-sitter-html")
+;;         (css         "https://github.com/tree-sitter/tree-sitter-css" "v0.23.2")
+;;         (javascript  "https://github.com/tree-sitter/tree-sitter-javascript" "v0.23.1")
+;;         (typescript  "https://github.com/tree-sitter/tree-sitter-typescript" "v0.23.1" "typescript/src")))
 
 ;; ═════════════════════════════════════════════════════════════════════════════
 ;;  LSP / EGLOT CONFIGURATION
@@ -441,15 +460,25 @@
 ;; ═════════════════════════════════════════════════════════════════════════════
 
 ;; ─── Python ──────────────────────────────────────────────────────────────────
-(use-package simp-python-mode
+;; (use-package simp-python-mode
+;;   :ensure nil
+;;   :hook ((simp-python-mode . display-fill-column-indicator-mode)
+;; 	 ;; (simp-python-mode . eglot-ensure)
+;; 	 (simp-python-mode . ruff-check-on-save-mode)
+;; 	 (simp-python-mode . ruff-organize-imports-on-save-mode)
+;; 	 (simp-python-mode . ruff-format-on-save-mode)
+;; 	 (simp-python-mode . (lambda () (setq-local tab-width 4))))
+;;   :mode (("\\.py\\'" . simp-python-mode)))
+
+(use-package python-ts-mode
   :ensure nil
-  :hook ((simp-python-mode . display-fill-column-indicator-mode)
-	 ;; (simp-python-mode . eglot-ensure)
-	 (simp-python-mode . ruff-check-on-save-mode)
-	 (simp-python-mode . ruff-organize-imports-on-save-mode)
-	 (simp-python-mode . ruff-format-on-save-mode)
-	 (simp-python-mode . (lambda () (setq-local tab-width 4))))
-  :mode (("\\.py\\'" . simp-python-mode)))
+  :hook ((python-ts-mode . display-fill-column-indicator-mode)
+	 ;; (python-ts-mode . eglot-ensure)
+	 (python-ts-mode . ruff-check-on-save-mode)
+	 (python-ts-mode . ruff-organize-imports-on-save-mode)
+	 (python-ts-mode . ruff-format-on-save-mode)
+	 (python-ts-mode . (lambda () (setq-local tab-width 4))))
+  :mode (("\\.py\\'" . python-ts-mode)))
 
 ;; ─── Rust ────────────────────────────────────────────────────────────────────
 (use-package simp-rust-mode
@@ -459,6 +488,20 @@
 	 (simp-rust-mode . (lambda () (setq-local tab-width 4))))
   :mode (("\\.rs\\'" . simp-rust-mode)))
 
+;; ─── Markdown ──────────────────────────────────────────────────────────────
+(use-package markdown-ts-mode
+  :ensure nil
+  :mode (("\\.md\\'" . markdown-ts-mode)))
+
+(use-package markdown-ts-appear
+  :pin nongnu
+  :hook (markdown-ts-mode . markdown-ts-appear-mode))
+
+(setopt markdown-ts-appear-diagram-renderers
+        '(("mermaid" . markdown-ts-appear-diagram-mmdc)))
+
+(use-package csv-mode
+  :mode "\\.csv\\'")
 
 ;; ─── TypeScript ──────────────────────────────────────────────────────────────
 (use-package typescript-ts-mode
@@ -508,10 +551,6 @@
   :mode (("Dockerfile\\'" . dockerfile-ts-mode)
          ("\\.[Dd]ockerfile\\'" . dockerfile-ts-mode)))
 
-;; ─── Svelte ──────────────────────────────────────────────────────────────────
-(use-package svelte-mode
-  :mode (("\\.svelte\\'" . svelte-mode)))
-
 ;; ═════════════════════════════════════════════════════════════════════════════
 ;;  CUSTOM LIBRARIES
 ;; ═════════════════════════════════════════════════════════════════════════════
@@ -523,21 +562,21 @@
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
 (require 'vscode)
 (require 'jumpy)
-(require 'glow-preview)
-(global-set-key (kbd "C-c g") #'glow-preview-popup)
-(global-set-key (kbd "C-c G") #'glow-preview-mode)
+;; (require 'glow-preview)
+;; (global-set-key (kbd "C-c g") #'glow-preview-popup)
+;; (global-set-key (kbd "C-c G") #'glow-preview-mode)
 
-(use-package claude-tmux
-  :vc (:url "https://github.com/caotanduc/claude-tmux"
-	    :rev :newest)
-  :custom
-  (claude-tmux-file-reference-format "@%s")
-  (claude-tmux-switch-after-send t)
-  (claude-tmux-press-enter-after-send nil)
-  :bind
-  ("C-c c f" . claude-tmux-send-file-reference)
-  ("C-c c l" . claude-tmux-send-file-reference-with-lines)
-  ("C-c c t" . claude-tmux-dispatch))
+;; (use-package claude-tmux
+;;   :vc (:url "https://github.com/caotanduc/claude-tmux"
+;; 	    :rev :newest)
+;;   :custom
+;;   (claude-tmux-file-reference-format "@%s")
+;;   (claude-tmux-switch-after-send t)
+;;   (claude-tmux-press-enter-after-send nil)
+;;   :bind
+;;   ("C-c c f" . claude-tmux-send-file-reference)
+;;   ("C-c c l" . claude-tmux-send-file-reference-with-lines)
+;;   ("C-c c t" . claude-tmux-dispatch))
 
 ;; Enable vscode-mode globally
 (global-vscode-mode 1)
@@ -546,7 +585,7 @@
 (jumpy-mode 1)
 
 (global-set-key (kbd "C-c -")   #'jumpy-back)
-(global-set-key (kbd "C-c _") #'jumpy-forward)
+(global-set-key (kbd "C-c _")	#'jumpy-forward)
 
 ;; ═════════════════════════════════════════════════════════════════════════════
 ;;  THEME
@@ -581,18 +620,10 @@
    "Ln: %l "
    mode-line-end-spaces))
 
-;; (setq magit-ediff-dwim-show-on-hunks t)
-;; (setq ediff-auto-refine 'on
-;;       ediff-auto-refine-limit 10000)
+(require 'server)
+(unless (server-running-p) (server-start))
 
-;; (setq ediff-window-setup-function #'ediff-setup-windows-plain
-;;       ediff-split-window-function #'split-window-horizontally)
+(setq ghostel-environment
+      '("EDITOR=emacsclient"
+	"VISUAL=emacsclient"))
 
-;; (add-hook 'ediff-startup-hook (lambda () (ediff-jump-to-difference 1)))
-
-;; (defun disable-y-or-n-p (orig-fun &rest args)
-;;   (cl-letf (((symbol-function 'y-or-n-p) (lambda (prompt) t)))
-;;     (apply orig-fun args)))
-
-;; (advice-add 'ediff-quit :around #'disable-y-or-n-p)
-;; (setq-default ediff-forward-word-function 'forward-char)

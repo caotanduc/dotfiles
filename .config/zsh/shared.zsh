@@ -9,20 +9,20 @@ export BREW_PREFIX="$(brew --prefix)"
 # ========================
 # Core
 # ========================
-case "$TERM_PROGRAM" in
-  zed)
-    export EDITOR="zed --wait"
-    ;;
-  ghostty)
-      export EDITOR="emacs -nw"
-      if [ -z "${TMUX:-}" ]; then
-	  eval ~/utils/project-switcher.sh
-      fi
-    ;;
-  *)
-    export EDITOR="emacs -nw"
-    ;;
-esac
+# case "$TERM_PROGRAM" in
+#   zed)
+#     export EDITOR="zed --wait"
+#     ;;
+#   ghostty)
+#       export EDITOR="emacs -nw"
+#       if [ -z "${TMUX:-}" ]; then
+# 	  eval ~/utils/project-switcher.sh
+#       fi
+#     ;;
+#   *)
+#     export EDITOR="emacs -nw"
+#     ;;
+# esac
 
 # ========================
 # Files
@@ -40,7 +40,7 @@ source $ZSH_CFG/aliases.zsh
 # ========================
 source $ZSH_CFG/tools/zsh-autosuggestions.zsh
 source $ZSH_CFG/tools/zoxide.zsh
-source $ZSH_CFG/tools/conda.zsh
+# source $ZSH_CFG/tools/conda.zsh
 source $ZSH_CFG/tools/nvm.zsh
 source $ZSH_CFG/tools/bun.zsh
 source $ZSH_CFG/tools/pnpm.zsh
