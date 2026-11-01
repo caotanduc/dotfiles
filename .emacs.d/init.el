@@ -37,9 +37,9 @@
 ;; ═════════════════════════════════════════════════════════════════════════════
 
 ;; Disable UI elements
-(tool-bar-mode 0)
+(setq tool-bar-mode 0)
 (menu-bar-mode 0)
-(scroll-bar-mode -1)
+(scroll-bar-mode 0)
 
 ;; Remove title bar / window decorations
 (add-to-list 'initial-frame-alist '(undecorated . t))
@@ -418,7 +418,7 @@
   ;; Language server configurations
   ;; Python: brew install pyright ruff basedpyright
   (add-to-list 'eglot-server-programs
-               `(simp-python-mode . ,(eglot-alternatives '(("pyright-langserver" "--stdio")
+               `(python-ts-mode . ,(eglot-alternatives '(("pyright-langserver" "--stdio")
                                                           ("basedpyright-langserver" "--stdio")
                                                           ("ruff" "server")))))
 
@@ -627,3 +627,6 @@
       '("EDITOR=emacsclient"
 	"VISUAL=emacsclient"))
 
+
+(setq major-mode-remap-alist
+      '((python-mode . python-ts-mode)))
