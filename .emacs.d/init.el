@@ -6,8 +6,7 @@
 ;;  PERFORMANCE & STARTUP OPTIMIZATIONS
 ;; ═════════════════════════════════════════════════════════════════════════════
 
-;; (setq native-comp-async-jobs-number 0) ; Disables background compilation
-;; (setq package-install-upgrade-built-in t)
+(setq visible-bell t)
 
 ;; Reduce GC frequency during startup
 (setq gc-cons-threshold (* 100 1024 1024)
