@@ -268,7 +268,11 @@
 ;; ═════════════════════════════════════════════════════════════════════════════
 
 (use-package magit
+  :bind (("C-c g" . magit-blame-addition))
+  :hook ((magit-pre-refresh  . diff-hl-magit-pre-refresh)
+         (magit-post-refresh . diff-hl-magit-post-refresh))
   :custom
+  (magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
   (magit-ediff-dwim-show-on-hunks t))
 
 (use-package ediff
@@ -293,10 +297,6 @@
   :config
   (setq-default ediff-forward-word-function #'forward-char)
   (advice-add 'ediff-quit :around #'my/ediff-disable-y-or-n-p))
-
-;; Magit display settings
-(setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
-(add-hook 'magit-status-mode-hook #'delete-other-windows)
 
 ;; ═════════════════════════════════════════════════════════════════════════════
 ;;  EDITING ENHANCEMENTS
@@ -325,6 +325,10 @@
 	 ("M-p" . (lambda () (interactive) (ghostel-send-key "p" "ctrl")))
 	 ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl"))))
   :config
+  (setq ghostel-environment
+      '("EDITOR=emacsclient"
+	"VISUAL=emacsclient"))
+
   (defun my/ghostel-send-C-k-and-kill ()
     "Send `C-k' to ghostel
 	Like normal Emacs `C-k'. Kill to end of line and put content in kill-ring"
@@ -333,10 +337,6 @@
     (ghostel-send-key "k" "ctrl"))
 
   (add-to-list 'ghostel-eval-cmds '("magit-status-setup-buffer" magit-status-setup-buffer)))
-
-(setq ghostel-environment
-      '("EDITOR=emacsclient"
-	"VISUAL=emacsclient"))
 
 (use-package project
   :ensure nil
@@ -357,24 +357,6 @@
          ;; ("m" . consult-ghostel-project)
          :map ghostel-semi-char-mode-map
          ("C-c h" . consult-ghostel-history)))
-
-;; ═════════════════════════════════════════════════════════════════════════════
-;;  TREE-SITTER CONFIGURATION
-;; ═════════════════════════════════════════════════════════════════════════════
-
-;; (setq treesit-language-source-alist
-;;       '((python      "https://github.com/tree-sitter/tree-sitter-python" "v0.23.6")
-;; 	(rust        "https://github.com/tree-sitter/tree-sitter-rust" "v0.23.3")
-;; 	(yaml        "https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.2")
-;; 	(dockerfile  "https://github.com/camdencheek/tree-sitter-dockerfile")
-;; 	(html        "https://github.com/tree-sitter/tree-sitter-html")
-;;         (css         "https://github.com/tree-sitter/tree-sitter-css" "v0.23.2")
-;;         (javascript  "https://github.com/tree-sitter/tree-sitter-javascript" "v0.23.1")
-;;         (typescript  "https://github.com/tree-sitter/tree-sitter-typescript" "v0.23.1" "typescript/src")))
-
-;; ═════════════════════════════════════════════════════════════════════════════
-;;  LSP / EGLOT CONFIGURATION
-;; ═════════════════════════════════════════════════════════════════════════════
 
 (use-package dumb-jump
   :custom
@@ -462,17 +444,6 @@
 ;; ═════════════════════════════════════════════════════════════════════════════
 ;;  LANGUAGE-SPECIFIC MODES
 ;; ═════════════════════════════════════════════════════════════════════════════
-
-;; ─── Python ──────────────────────────────────────────────────────────────────
-;; (use-package simp-python-mode
-;;   :ensure nil
-;;   :hook ((simp-python-mode . display-fill-column-indicator-mode)
-;; 	 ;; (simp-python-mode . eglot-ensure)
-;; 	 (simp-python-mode . ruff-check-on-save-mode)
-;; 	 (simp-python-mode . ruff-organize-imports-on-save-mode)
-;; 	 (simp-python-mode . ruff-format-on-save-mode)
-;; 	 (simp-python-mode . (lambda () (setq-local tab-width 4))))
-;;   :mode (("\\.py\\'" . simp-python-mode)))
 
 (use-package python-ts-mode
   :ensure nil
@@ -606,10 +577,18 @@
 (require 'server)
 (unless (server-running-p) (server-start))
 
-(setq ghostel-environment
-      '("EDITOR=emacsclient"
-	"VISUAL=emacsclient"))
-
-
 (setq major-mode-remap-alist
       '((python-mode . python-ts-mode)))
+
+;; https://blog.alex.balgavy.eu/how-to-have-emacs-notify-you-when-it-needs-your-attention/
+(defun my/notify (title message)
+  "Show notification with TITLE and MESSAGE."
+  (cond ((fboundp 'ns-do-applescript)
+         (ns-do-applescript
+          (format "display notification \"%s\" with title \"%s\""
+                  (replace-regexp-in-string "\"" "#" message)
+                  (replace-regexp-in-string "\"" "#" title))))
+        (t (error "No notification handler defined!"))))
+
+(use-package diff-hl)
+(global-diff-hl-mode)
