@@ -269,8 +269,6 @@
 
 (use-package magit
   :bind (("C-c g" . magit-blame-addition))
-  :hook ((magit-pre-refresh  . diff-hl-magit-pre-refresh)
-         (magit-post-refresh . diff-hl-magit-post-refresh))
   :custom
   (magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
   (magit-ediff-dwim-show-on-hunks t))
@@ -589,6 +587,3 @@
                   (replace-regexp-in-string "\"" "#" message)
                   (replace-regexp-in-string "\"" "#" title))))
         (t (error "No notification handler defined!"))))
-
-(use-package diff-hl)
-(global-diff-hl-mode)
