@@ -6,8 +6,6 @@
 ;;  PERFORMANCE & STARTUP OPTIMIZATIONS
 ;; ═════════════════════════════════════════════════════════════════════════════
 
-(setq visible-bell t)
-
 ;; Reduce GC frequency during startup
 (setq gc-cons-threshold (* 100 1024 1024)
       gc-cons-percentage 0.3)
@@ -48,7 +46,7 @@
 (setq inhibit-startup-screen t)
 (setq inhibit-startup-message t)
 (setq inhibit-startup-buffer-menu t)
-(setq visible-bell nil)
+(setq visible-bell t)
 
 ;; Scrolling behavior
 (setq scroll-conservatively 101
@@ -336,14 +334,21 @@
 
   (add-to-list 'ghostel-eval-cmds '("magit-status-setup-buffer" magit-status-setup-buffer)))
 
+(setq ghostel-environment
+      '("EDITOR=emacsclient"
+	"VISUAL=emacsclient"))
+
 (use-package project
   :ensure nil
   :bind (:map project-prefix-map
-         ("m" . ghostel-project)
-         ("M" . ghostel-project-list-buffers))
+	      ("G" . magit-project-status)
+              ("m" . ghostel-project)
+              ("M" . ghostel-project-list-buffers))
   :config
-  (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t)
-  (add-to-list 'project-switch-commands '(ghostel-project-list-buffers "Ghostel buffers") t))
+  (assq-delete-all 'project-vc-dir project-switch-commands)
+  (add-to-list 'project-switch-commands '(magit-project-status "Magit" ?G) t)
+  (add-to-list 'project-switch-commands '(ghostel-project "Ghostel" ?m) t)
+  (add-to-list 'project-switch-commands '(ghostel-project-list-buffers "Ghostel buffers" ?M) t))
 
 (use-package consult-ghostel
   :hook (after-init . consult-ghostel-mode)
@@ -479,6 +484,24 @@
 	 (python-ts-mode . (lambda () (setq-local tab-width 4))))
   :mode (("\\.py\\'" . python-ts-mode)))
 
+(use-package pyvenv
+  :config
+  (defun my/python-auto-venv ()
+    "Activate the .venv belonging to the current project."
+    (when-let* ((project (project-current nil))
+                (root (project-root project))
+                (venv (expand-file-name ".venv" root)))
+      (when (and (file-directory-p venv)
+                 (not (equal pyvenv-virtual-env venv)))
+        (pyvenv-activate venv)
+        (message "Activated venv: %s" venv))))
+
+  (advice-add 'project-switch-project :after
+              (lambda (&rest _)
+                (my/python-auto-venv)))
+  (add-hook 'python-ts-mode-hook #'my/python-auto-venv))
+
+
 ;; ─── Rust ────────────────────────────────────────────────────────────────────
 (use-package simp-rust-mode
   :ensure nil
@@ -502,22 +525,6 @@
 (use-package csv-mode
   :mode "\\.csv\\'")
 
-;; ─── TypeScript ──────────────────────────────────────────────────────────────
-(use-package typescript-ts-mode
-  :ensure nil
-  :mode (("\\.ts\\'" . typescript-ts-mode))
-  :hook ((typescript-ts-mode . (lambda () (font-lock-mode 0)))))
-
-;; ─── JavaScript ──────────────────────────────────────────────────────────────
-(use-package js-ts-mode
-  :ensure nil
-  :mode (("\\.js\\'" . js-ts-mode))
-  :hook
-  (js-ts-mode . (lambda ()
-                  (setq-local tab-width 2)
-                  (setq-local js-indent-level 2)
-                  (setq-local indent-tabs-mode nil))))
-
 ;; ─── HTML ────────────────────────────────────────────────────────────────────
 (use-package html-ts-mode
   :ensure nil
@@ -527,16 +534,6 @@
                     (setq-local tab-width 2)
                     (setq-local sgml-basic-offset 2)
                     (setq-local indent-tabs-mode nil))))
-
-;; ─── CSS ─────────────────────────────────────────────────────────────────────
-(use-package css-ts-mode
-  :ensure nil
-  :mode (("\\.css\\'" . css-ts-mode))
-  :hook
-  (css-ts-mode . (lambda ()
-                   (setq-local tab-width 2)
-                   (setq-local css-indent-offset 2)
-                   (setq-local indent-tabs-mode nil))))
 
 ;; ─── YAML ────────────────────────────────────────────────────────────────────
 (use-package yaml-ts-mode
@@ -558,33 +555,20 @@
   :vc (:url "https://github.com/caotanduc/breadcrumb"
 	    :rev :newest))
 
+
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
-(require 'vscode)
-(require 'jumpy)
-;; (require 'glow-preview)
-;; (global-set-key (kbd "C-c g") #'glow-preview-popup)
-;; (global-set-key (kbd "C-c G") #'glow-preview-mode)
-
-;; (use-package claude-tmux
-;;   :vc (:url "https://github.com/caotanduc/claude-tmux"
-;; 	    :rev :newest)
-;;   :custom
-;;   (claude-tmux-file-reference-format "@%s")
-;;   (claude-tmux-switch-after-send t)
-;;   (claude-tmux-press-enter-after-send nil)
-;;   :bind
-;;   ("C-c c f" . claude-tmux-send-file-reference)
-;;   ("C-c c l" . claude-tmux-send-file-reference-with-lines)
-;;   ("C-c c t" . claude-tmux-dispatch))
-
 ;; Enable vscode-mode globally
+(require 'vscode)
 (global-vscode-mode 1)
 
 ;; Enable jumpy-mode globally
+(require 'jumpy)
 (jumpy-mode 1)
 
 (global-set-key (kbd "C-c -")   #'jumpy-back)
+(global-set-key (kbd "s-[")	#'jumpy-back)
 (global-set-key (kbd "C-c _")	#'jumpy-forward)
+(global-set-key (kbd "s-]")	#'jumpy-forward)
 
 ;; ═════════════════════════════════════════════════════════════════════════════
 ;;  THEME
