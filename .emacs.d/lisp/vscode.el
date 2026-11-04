@@ -24,32 +24,11 @@
 ;; Core Helpers
 ;; ─────────────────────────────────────────────────────────────
 
-(defun vscode-toggle-command ()
-  "Toggle the command palette: open M-x if inactive, cancel if active."
-  (interactive)
-  (if (minibufferp)
-      (keyboard-escape-quit)
-    (call-interactively #'execute-extended-command)))
-
-(defun vscode-open-explorer ()
-  "Open project root in Dired if inside a project, else use `dired-jump'."
-  (interactive)
-  (if (project-current)
-      (project-dired)
-    (dired-jump)))
-
 (defun vscode-kill-other-buffers ()
   "Kill all other buffers, keeping only the current one."
   (interactive)
   (mapc #'kill-buffer (delq (current-buffer) (buffer-list)))
   (message "Other buffers killed."))
-
-(defun vscode-switch-buffer ()
-  "Switch buffer smartly: use project buffer list if available."
-  (interactive)
-  (if (project-current)
-      (call-interactively #'project-switch-to-buffer)
-    (consult-buffer)))
 
 (defun vscode-insert-line-below ()
   "Insert a new line below the current one and keep cursor position."
@@ -63,17 +42,6 @@
   (beginning-of-line)
   (open-line 1)
   (indent-according-to-mode))
-
-(defun vscode-mark-whole-word ()
-  "Select the entire word at point, regardless of cursor position."
-  (interactive)
-  (let ((bounds (bounds-of-thing-at-point 'word)))
-    (if bounds
-        (progn
-          (set-mark (cdr bounds))
-          (goto-char (car bounds))
-          (activate-mark))
-      (message "No word at point."))))
 
 (defun vscode-mark-whole-line ()
   "Select the entire current line (like VS Code’s ⌘L)."
@@ -194,15 +162,9 @@ CHAR can be one of: ' \" ( [ {"
 (defvar vscode-mode-map
   (let ((map (make-sparse-keymap)))
     ;; Main bindings
-    (define-key map (kbd "M-RET")       #'vscode-toggle-command)
     (define-key map (kbd "C-c f")       #'consult-ripgrep)
-    (define-key map (kbd "C-c TAB")     #'consult-project-buffer)
-    (define-key map (kbd "C-c w")       #'kill-this-buffer)
-    (define-key map (kbd "s-s")         #'save-buffer)
-    (define-key map (kbd "s-E")         #'vscode-open-explorer)
     (define-key map (kbd "C-o")         #'vscode-insert-line-below)
     (define-key map (kbd "C-c o")	#'vscode-insert-line-above)
-    (define-key map (kbd "C-c d")       #'vscode-mark-whole-word)
     (define-key map (kbd "C-c l")       #'vscode-mark-whole-line)
     (define-key map (kbd "C-c \\")      #'vscode-find-cursor)
     (define-key map (kbd "C-c /")       #'comment-line)
@@ -212,11 +174,11 @@ CHAR can be one of: ' \" ( [ {"
     (define-key map (kbd "C-c s")       #'save-buffer-no-hooks)
     (define-key map (kbd "C-c #")       #'consult-imenu)
     (define-key map (kbd "C-c L")	#'move-buffer-to-right-window)
-    (global-set-key (kbd "C-c i '") (lambda () (interactive) (select-inside ?\')))
-    (global-set-key (kbd "C-c i \"") (lambda () (interactive) (select-inside ?\")))
-    (global-set-key (kbd "C-c i (") (lambda () (interactive) (select-inside ?\()))
-    (global-set-key (kbd "C-c i [") (lambda () (interactive) (select-inside ?\[)))
-    (global-set-key (kbd "C-c i {") (lambda () (interactive) (select-inside ?\{)))
+    (global-set-key (kbd "C-c i '")	(lambda () (interactive) (select-inside ?\')))
+    (global-set-key (kbd "C-c i \"")	(lambda () (interactive) (select-inside ?\")))
+    (global-set-key (kbd "C-c i (")	(lambda () (interactive) (select-inside ?\()))
+    (global-set-key (kbd "C-c i [")	(lambda () (interactive) (select-inside ?\[)))
+    (global-set-key (kbd "C-c i {")	(lambda () (interactive) (select-inside ?\{)))
     map))
 
 ;;;###autoload
