@@ -13,12 +13,7 @@
 ;;; Code:
 
 (require 'consult)
-(require 'project)
-(require 'dired)
-(require 'dired-x)       ;; for dired-jump
-(require 'xref)
 (require 'pulse)
-(require 'cl-lib)
 
 ;; ─────────────────────────────────────────────────────────────
 ;; Core Helpers
