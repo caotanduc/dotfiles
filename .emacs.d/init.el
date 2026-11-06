@@ -15,10 +15,8 @@
 (setq process-adaptive-read-buffering nil)
 
 ;; Display optimizations
-(setq blink-cursor-mode nil)
+(setq blink-cursor-mode t)
 (setq frame-inhibit-implied-resize t)
-;; (setq font-lock-maximum-decoration 1)
-;; (global-font-lock-mode 0)
 (setq fast-but-imprecise-scrolling t)
 (setq redisplay-dont-pause t)
 
@@ -54,7 +52,6 @@
       scroll-step 1)
 
 ;; Font configuration
-;; (add-to-list 'default-frame-alist `(font . "Iosevka Extended-20"))
 (add-to-list 'default-frame-alist `(font . "Terminus (TTF)-20"))
 
 ;; Frame size
@@ -356,15 +353,6 @@
          :map ghostel-semi-char-mode-map
          ("C-c h" . consult-ghostel-history)))
 
-(use-package dumb-jump
-  :custom
-  (dumb-jump-prefer-searcher 'rg)
-  (xref-show-definitions-function #'consult-xref)
-  :config
-  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
-
-(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
-
 ;; Flymake settings
 (setq flymake-no-changes-timeout 0.2
       flymake-start-on-save-buffer t
@@ -446,7 +434,7 @@
 (use-package python-ts-mode
   :ensure nil
   :hook ((python-ts-mode . display-fill-column-indicator-mode)
-	 ;; (python-ts-mode . eglot-ensure)
+	 (python-ts-mode . eglot-ensure)
 	 (python-ts-mode . ruff-check-on-save-mode)
 	 (python-ts-mode . ruff-organize-imports-on-save-mode)
 	 (python-ts-mode . ruff-format-on-save-mode)
@@ -576,7 +564,9 @@
 (unless (server-running-p) (server-start))
 
 (setq major-mode-remap-alist
-      '((python-mode . python-ts-mode)))
+      '((python-mode . python-ts-mode)
+	(js-json-mode . json-ts-mode)
+	(sh-mode . bash-ts-mode)))
 
 ;; https://blog.alex.balgavy.eu/how-to-have-emacs-notify-you-when-it-needs-your-attention/
 (defun my/notify (title message)
